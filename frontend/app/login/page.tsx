@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import {Eye,EyeOff,ChefHat} from 'lucide-react'
 
+import PageLoader from '@/components/ui/PageLoader'
+
 export default function LoginPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
@@ -12,7 +14,7 @@ export default function LoginPage() {
   const [remember, setRemember] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const [theme, setTheme] = useState<'light' | 'dark'>('dark')
+  const [theme, setTheme] = useState<'light' | 'dark'| null>(null)
 
   useEffect(() => {
     const saved = localStorage.getItem('foodieland-theme') as 'light' | 'dark' | null
@@ -78,14 +80,18 @@ export default function LoginPage() {
   `
 
   return (
-    <div className={`
+    <>
+      <PageLoader/>
+      <div className={`
       min-h-screen flex items-center justify-center px-4
       relative overflow-hidden transition-all duration-500
       ${dark
         ? 'bg-linear-to-br from-[#0f0f0f] via-[#1a0a00] to-[#0f0f0f]'
         : 'bg-linear-to-br from-[#fff7f0] via-[#ffe8d6] to-[#fff3eb]'
       }
-    `}>
+      `}>
+
+      
 
       <div className={`
         absolute -top-24 -right-20 w-96 h-96 rounded-full
@@ -216,5 +222,7 @@ export default function LoginPage() {
 
       </div>
     </div>
+    </>
+  
   )
 }
