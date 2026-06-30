@@ -21,7 +21,16 @@
     "afterFiles": [],
     "fallback": []
   },
-  "dynamicRoutes": [],
+  "dynamicRoutes": [
+    {
+      "page": "/api/restaurants/[id]",
+      "regex": "^/api/restaurants/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/restaurants/(?<nxtPid>[^/]+?)(?:/)?$"
+    }
+  ],
   "staticRoutes": [
     {
       "page": "/_global-error",
@@ -40,6 +49,12 @@
       "regex": "^/api/health(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/api/health(?:/)?$"
+    },
+    {
+      "page": "/api/restaurants",
+      "regex": "^/api/restaurants(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/restaurants(?:/)?$"
     }
   ],
   "dataRoutes": [],
