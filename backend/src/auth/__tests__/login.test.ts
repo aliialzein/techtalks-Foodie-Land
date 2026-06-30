@@ -60,7 +60,7 @@ describe("login()", () => {
     ).rejects.toThrow("Invalid email please try again")
   })
 
-  it("should fail if password incorrect", async () => {
+  it("should fail if Wrong password", async () => {
     prismaMock.user.findUnique.mockResolvedValue({
       id: "1",
       password: "hashed",
@@ -70,6 +70,6 @@ describe("login()", () => {
 
     await expect(
       login({ email: "john@test.com", password: "wrong" })
-    ).rejects.toThrow("Password is inccorect")
+    ).rejects.toThrow("Wrong password")
   })
 })

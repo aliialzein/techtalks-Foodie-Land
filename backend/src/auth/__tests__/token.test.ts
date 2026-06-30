@@ -7,7 +7,7 @@ vi.mock("jsonwebtoken", () => ({
 }))
 
 import jwt from "jsonwebtoken"
-import { readToken } from "../auth_service"
+import { readToken } from "../token"
 
 const jwtMock = jwt as any
 
