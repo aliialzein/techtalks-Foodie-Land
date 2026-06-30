@@ -1,4 +1,4 @@
-import type { Prisma, Restaurant } from "@prisma/client";
+import type { Prisma, Restaurant } from "@/generated/prisma/client";
 
 export type RestaurantWithOwner = Prisma.RestaurantGetPayload<{
   include: {
