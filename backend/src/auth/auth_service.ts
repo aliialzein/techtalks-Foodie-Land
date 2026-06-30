@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { prisma } from "../lib/prisma";
 import { RegistrationInput, LoginInput } from "./auth_schema";
 import { createToken } from "./token";
