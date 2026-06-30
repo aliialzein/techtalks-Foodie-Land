@@ -4,18 +4,23 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "postinstall": "prisma generate",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "test": "vitest run --passWithNoTests",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
-    "next": "^16.2.9",
+    "next": "16.2.9",
+    "pg": "^8.22.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "winston": "^3.19.0"
+    "winston": "^3.19.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^20.19.43",
@@ -23,9 +28,10 @@
     "@types/react-dom": "^19.2.3",
     "@vitest/coverage-v8": "^4.1.9",
     "eslint": "^9.39.4",
-    "eslint-config-next": "^15.3.3",
+    "eslint-config-next": "16.2.9",
     "prisma": "^7.8.0",
     "typescript": "^5.9.3",
     "vitest": "^4.1.9"
-  }
+  },
+  "type": "module"
 }
