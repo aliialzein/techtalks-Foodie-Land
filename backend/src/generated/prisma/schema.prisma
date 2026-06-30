@@ -1,0 +1,212 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+//
+// ENUMS
+//
+enum UserRole {
+  CUSTOMER
+  OWNER
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  PREPARING
+  READY
+  DELIVERED
+  CANCELLED
+}
+
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+//
+// USER
+//
+model User {
+  id       String   @id @default(uuid())
+  name     String
+  email    String   @unique
+  password String
+  role     UserRole @default(CUSTOMER)
+
+  restaurants  Restaurant[]
+  cart         Cart?
+  orders       Order[]
+  reservations Reservation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+//
+// RESTAURANT
+//
+model Restaurant {
+  id          String  @id @default(uuid())
+  ownerId     String
+  name        String
+  description String?
+  isActive    Boolean @default(true)
+
+  owner User @relation(fields: [ownerId], references: [id])
+
+  foods        Food[]
+  categories   FoodCategory[]
+  menuGroups   RestaurantCategory[]
+  orders       Order[]
+  reservations Reservation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+//
+// RESTAURANT MENU SECTIONS (Burger, Drinks, etc.)
+//
+model RestaurantCategory {
+  id           String @id @default(uuid())
+  restaurantId String
+  name         String
+  position     Int    @default(0)
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+//
+// FOOD (MENU ITEM)
+//
+model Food {
+  id           String @id @default(uuid())
+  restaurantId String
+
+  name        String
+  description String?
+  price       Float
+  imageUrl    String?
+  isAvailable Boolean @default(true)
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id])
+
+  categories FoodCategoryOnFood[]
+  cartItems  CartItem[]
+  orderItems OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+//
+// FOOD CATEGORY (per restaurant)
+//
+model FoodCategory {
+  id           String @id @default(uuid())
+  restaurantId String
+  name         String
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id])
+
+  foods FoodCategoryOnFood[]
+
+  createdAt DateTime @default(now())
+}
+
+//
+// MANY-TO-MANY FOOD <-> CATEGORY
+//
+model FoodCategoryOnFood {
+  foodId     String
+  categoryId String
+
+  food     Food         @relation(fields: [foodId], references: [id])
+  category FoodCategory @relation(fields: [categoryId], references: [id])
+
+  @@id([foodId, categoryId])
+}
+
+// CART
+//
+model Cart {
+  id     String @id @default(uuid())
+  userId String @unique
+
+  user  User       @relation(fields: [userId], references: [id])
+  items CartItem[]
+}
+
+model CartItem {
+  id       String @id @default(uuid())
+  cartId   String
+  foodId   String
+  quantity Int
+
+  unitPriceSnapshot Float
+
+  cart Cart @relation(fields: [cartId], references: [id])
+  food Food @relation(fields: [foodId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+//
+// ORDERS
+//
+model Order {
+  id           String @id @default(uuid())
+  userId       String
+  restaurantId String
+
+  status     OrderStatus @default(PENDING)
+  totalPrice Float
+
+  user       User       @relation(fields: [userId], references: [id])
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id])
+
+  items OrderItem[]
+
+  createdAt DateTime @default(now())
+}
+
+model OrderItem {
+  id      String @id @default(uuid())
+  orderId String
+  foodId  String
+
+  nameSnapshot  String
+  priceSnapshot Float
+  quantity      Int
+
+  order Order @relation(fields: [orderId], references: [id])
+  food  Food  @relation(fields: [foodId], references: [id])
+}
+
+//
+// RESERVATIONS
+//
+model Reservation {
+  id           String @id @default(uuid())
+  userId       String
+  restaurantId String
+
+  dateTime    DateTime
+  peopleCount Int
+  status      ReservationStatus @default(PENDING)
+
+  user       User       @relation(fields: [userId], references: [id])
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id])
+
+  createdAt DateTime @default(now())
+}
