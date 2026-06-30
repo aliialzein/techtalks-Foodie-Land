@@ -13,8 +13,8 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@prisma/client": "^7.8.0",
     "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.3",
     "express": "^5.2.1",
@@ -22,7 +22,7 @@
     "jsonwebtoken": "^9.0.3",
     "next": "^16.2.9",
     "pg": "^8.22.0",
-    "prisma": "^5.22.0",
+    "prisma": "^7.8.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "winston": "^3.19.0",
