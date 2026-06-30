@@ -31,7 +31,7 @@ jobs:
 
       # Install backend dependencies exactly as locked in package-lock.json.
       - name: Install backend dependencies
-        run: npm ci
+        run: npm install --ignore-scripts
 
       # Execute the backend test suite.
       - name: Run backend tests
