@@ -1,4 +1,4 @@
-﻿import prisma from "@/config";
+﻿import {prisma} from "@/config";
 import type { CreateRestaurantInput, UpdateRestaurantInput } from "./restaurant.types";
 
 export class RestaurantRepository {
