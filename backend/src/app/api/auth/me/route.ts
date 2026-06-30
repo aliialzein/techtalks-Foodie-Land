@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
-import { readToken, getMe }          from "@/auth/auth_service"
+import {getMe }          from "@/auth/auth_service"
+import {readToken} from  "@/auth/token"
 
 export async function GET(req: NextRequest) {
   try {
