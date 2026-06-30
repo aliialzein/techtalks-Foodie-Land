@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server"
 import { registerSchema }            from "@/auth/auth_schema"
 import { register }                  from "@/auth/auth_service"
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req: NextRequest) {
   try {
 

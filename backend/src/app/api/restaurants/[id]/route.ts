@@ -1,5 +1,7 @@
 import { deleteRestaurant, getRestaurant, updateRestaurant} from "@/modules/restaurant/restaurant.controller";
 
+export const dynamic = "force-dynamic";
+
 type RestaurantRouteContext = {
   params: Promise<{
     id: string;
