@@ -31,7 +31,11 @@ jobs:
 
       # Install backend dependencies exactly as locked in package-lock.json.
       - name: Install backend dependencies
-        run: npm install --ignore-scripts
+        run: npm install
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+        
 
       # Execute the backend test suite.
       - name: Run backend tests
