@@ -8,7 +8,7 @@ vi.mock("../../lib/prisma", () => ({
   },
 }))
 
-vi.mock("bcrypt", () => ({
+vi.mock("bcryptjs", () => ({
   default: {
     compare: vi.fn(),
   },
@@ -21,7 +21,7 @@ vi.mock("jsonwebtoken", () => ({
 }))
 
 import { prisma } from "../../lib/prisma"
-import bcrypt from "bcrypt"
+import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 import { login } from "../auth_service"
 
