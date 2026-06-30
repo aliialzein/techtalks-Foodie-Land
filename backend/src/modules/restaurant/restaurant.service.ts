@@ -1,4 +1,4 @@
-﻿import type { Restaurant } from "@/generated/prisma/client";
+﻿import type { Restaurant } from "@/generated/prisma";
 import { RestaurantRepository } from "./restaurant.repository";
 import type {
   CreateRestaurantInput,
