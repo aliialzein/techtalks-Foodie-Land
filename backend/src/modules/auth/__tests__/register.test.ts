@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest"
 
-vi.mock("../../lib/prisma", () => ({
+vi.mock("../../../lib/prisma", () => ({
   prisma: {
     user: {
       findUnique: vi.fn(),
@@ -21,10 +21,10 @@ vi.mock("jsonwebtoken", () => ({
   },
 }))
 
-import { prisma } from "../../lib/prisma"
+import { prisma } from "../../../lib/prisma"
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
-import { register } from "../auth_service"
+import { register } from "../auth.service"
 
 const prismaMock = prisma as any
 const bcryptMock = bcrypt as any

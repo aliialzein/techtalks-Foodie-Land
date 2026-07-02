@@ -5,10 +5,10 @@ import {
   getRestaurant,
   getRestaurants,
   updateRestaurant,
-} from "./restaurant.controller";
-import { RestaurantRepository } from "./restaurant.repository";
+} from "../restaurant.controller";
+import { RestaurantRepository } from "../restaurant.repository";
 
-vi.mock("./restaurant.repository", () => ({
+vi.mock("../restaurant.repository", () => ({
   RestaurantRepository: {
     getAll: vi.fn(),
     getById: vi.fn(),

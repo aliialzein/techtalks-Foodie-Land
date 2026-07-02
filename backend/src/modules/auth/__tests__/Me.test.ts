@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest"
 
-vi.mock("../../lib/prisma", () => ({
+vi.mock("../../../lib/prisma", () => ({
   prisma: {
     user: {
       findUnique: vi.fn(),
@@ -8,8 +8,8 @@ vi.mock("../../lib/prisma", () => ({
   },
 }))
 
-import { prisma } from "../../lib/prisma"
-import { getMe } from "../auth_service"
+import { prisma } from "../../../lib/prisma"
+import { getMe } from "../auth.service"
 
 const prismaMock = prisma as any
 

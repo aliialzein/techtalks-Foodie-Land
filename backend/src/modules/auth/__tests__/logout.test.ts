@@ -1,6 +1,6 @@
 import { vi, describe, it, expect } from "vitest";
 
-vi.mock("../../lib/prisma", () => ({
+vi.mock("../../../lib/prisma", () => ({
   prisma: {
     user: {
       findUnique: vi.fn(),
@@ -9,7 +9,7 @@ vi.mock("../../lib/prisma", () => ({
   },
 }));
 
-import { logout } from "../auth_service";
+import { logout } from "../auth.service";
 
 describe("logout()", () => {
   it("should return message", async () => {
