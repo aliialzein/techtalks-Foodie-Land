@@ -1,5 +1,20 @@
 node_modules
+
 # Keep environment variables out of version control
 .env
+
+# Next.js build output
 .next
 
+# TypeScript incremental build cache
+*.tsbuildinfo
+
+# Vitest coverage output
+coverage
+
+# Prisma engine temp files (created during `prisma generate`)
+*.tmp
+*.tmp[0-9]*
+
+# Log files (winston logger output: error.log, all.log, exceptions.log)
+*.log
