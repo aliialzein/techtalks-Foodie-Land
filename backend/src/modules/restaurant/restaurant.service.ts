@@ -1,24 +1,11 @@
-﻿import type { Restaurant } from "@/generated/prisma";
+import type { Restaurant } from "@/generated/prisma";
+import { NotFoundError } from "../../util/errors";
 import { RestaurantRepository } from "./restaurant.repository";
 import type {
   CreateRestaurantInput,
   RestaurantWithOwner,
   UpdateRestaurantInput,
 } from "./restaurant.types";
-
-export class RestaurantNotFoundError extends Error {
-  constructor(id: string) {
-    super(`Restaurant not found: ${id}`);
-    this.name = "RestaurantNotFoundError";
-  }
-}
-
-export class OwnerNotFoundError extends Error {
-  constructor(id: string) {
-    super(`Owner not found: ${id}`);
-    this.name = "OwnerNotFoundError";
-  }
-}
 
 export class RestaurantService {
   static getAll(): Promise<RestaurantWithOwner[]> {
@@ -29,7 +16,7 @@ export class RestaurantService {
     const restaurant = await RestaurantRepository.getById(id);
 
     if (!restaurant) {
-      throw new RestaurantNotFoundError(id);
+      throw new NotFoundError("Restaurant", id);
     }
 
     return restaurant;
@@ -39,7 +26,7 @@ export class RestaurantService {
     const owner = await RestaurantRepository.ownerExists(payload.ownerId);
 
     if (!owner) {
-      throw new OwnerNotFoundError(payload.ownerId);
+      throw new NotFoundError("Owner", payload.ownerId);
     }
 
     return RestaurantRepository.create(payload);

@@ -82,6 +82,17 @@ describe("restaurant controller", () => {
     expect(await readJson(response)).toEqual({ error: "Restaurant not found" });
   });
 
+  it("returns 500 (without crashing) on an unexpected repository error", async () => {
+    vi.mocked(RestaurantRepository.getAll).mockRejectedValue(
+      new Error("database connection lost"),
+    );
+
+    const response = await getRestaurants();
+
+    expect(response.status).toBe(500);
+    expect(await readJson(response)).toEqual({ error: "Internal server error" });
+  });
+
   describe("createRestaurant", () => {
     function makeRequest(body: unknown) {
       return new Request("http://localhost/api/restaurants", {
