@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useState } from "react";
 import {
   AlertCircle,
-  ChefHat,
   Loader2,
   LogIn,
   RefreshCw,
@@ -12,12 +11,15 @@ import {
 import { cancelOrder, getOrders, type Order } from "@/lib/orders";
 import { useCurrentUser } from "@/lib/auth";
 import { useTheme } from "@/hooks/useTheme";
+import { useCart } from "@/hooks/useCart";
+import AppHeader from "@/components/AppHeader";
 import OrderCard from "@/components/orders/OrderCard";
 
 export default function OrdersPage() {
   const theme = useTheme();
   const dark = theme !== "light"; // default to dark before the theme resolves
   const user = useCurrentUser();
+  const { count: cartCount } = useCart();
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -85,20 +87,10 @@ export default function OrdersPage() {
       />
 
       <div className="relative z-10 mx-auto w-full max-w-2xl">
-        <header className="mb-8 flex items-center justify-between gap-4">
+        <AppHeader dark={dark} cartCount={cartCount} active="orders" />
+
+        <header className="mb-8 flex items-end justify-between gap-4">
           <div>
-            <div className="mb-3 flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-orange-600 to-orange-400 shadow-[0_4px_12px_rgba(234,88,12,0.4)]">
-                <ChefHat className="h-5 w-5 text-white" />
-              </div>
-              <span
-                className={`text-[1.05rem] font-semibold tracking-tight ${
-                  dark ? "text-white" : "text-gray-900"
-                }`}
-              >
-                Foodie<span className="text-orange-600">Land</span>
-              </span>
-            </div>
             <h1
               className={`text-2xl font-semibold tracking-tight ${
                 dark ? "text-white" : "text-gray-900"

@@ -54,7 +54,7 @@ export default function LoginPage() {
         return
       }
       saveSession(data)
-      router.push('/orders')
+      router.push('/menu')
     } catch {
       setError('Something went wrong. Please try again.')
     } finally {
