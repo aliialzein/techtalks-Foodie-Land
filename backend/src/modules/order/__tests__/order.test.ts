@@ -92,6 +92,22 @@ describe("order controller", () => {
     ]);
   });
 
+  it("filters orders by userId when provided", async () => {
+    vi.mocked(OrderRepository.getAll).mockResolvedValue([order]);
+
+    const response = await getOrders(userId);
+
+    expect(response.status).toBe(200);
+    expect(OrderRepository.getAll).toHaveBeenCalledWith(userId);
+  });
+
+  it("rejects an invalid userId filter", async () => {
+    const response = await getOrders("not-a-uuid");
+
+    expect(response.status).toBe(400);
+    expect(OrderRepository.getAll).not.toHaveBeenCalled();
+  });
+
   it("returns an order by id", async () => {
     vi.mocked(OrderRepository.getById).mockResolvedValue(order);
 

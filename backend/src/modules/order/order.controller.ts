@@ -5,11 +5,13 @@ import {
   createOrderSchema,
   orderIdSchema,
   updateOrderStatusSchema,
+  userIdSchema,
 } from "./order.validation";
 
-export async function getOrders() {
+export async function getOrders(userId?: string) {
   try {
-    const data = await OrderService.getAll();
+    const filterUserId = userId ? userIdSchema.parse(userId) : undefined;
+    const data = await OrderService.getAll(filterUserId);
     return jsonResponse(data, 200);
   } catch (error) {
     return handleError(error);

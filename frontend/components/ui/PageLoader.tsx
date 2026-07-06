@@ -12,9 +12,9 @@ export default function PageLoader({minDuration=300}:PageLoaderProps) {
     const [fading, setFading] = useState(false)
     // const [theme,setTheme] = useState<'light' | 'dark'| null>(null)
 
-    const[theme,setTheme] = useState<'light'|'dark'>(()=>{
+    const[theme] = useState<'light'|'dark'>(()=>{
     if (typeof window === 'undefined') return 'dark'
-    return (document.documentElement.getAttribute('data-theme') as 'light' | 'dark') ?? 'dark'    
+    return (document.documentElement.getAttribute('data-theme') as 'light' | 'dark') ?? 'dark'
     })
 
 // useEffect(() => {

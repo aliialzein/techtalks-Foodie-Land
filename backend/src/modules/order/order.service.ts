@@ -16,8 +16,8 @@ const ORDER_STATUS_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
 };
 
 export class OrderService {
-  static getAll(): Promise<OrderWithDetails[]> {
-    return OrderRepository.getAll();
+  static getAll(userId?: string): Promise<OrderWithDetails[]> {
+    return OrderRepository.getAll(userId);
   }
 
   static async getById(id: string): Promise<OrderWithDetails> {

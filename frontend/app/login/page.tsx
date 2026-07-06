@@ -1,10 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {Eye,EyeOff,ChefHat} from 'lucide-react'
 
 import PageLoader from '@/components/ui/PageLoader'
+import { useTheme } from '@/hooks/useTheme'
+import { saveSession } from '@/lib/auth'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -14,26 +16,7 @@ export default function LoginPage() {
   const [remember, setRemember] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const [theme, setTheme] = useState<'light' | 'dark'| null>(null)
-
-  useEffect(() => {
-    const saved = localStorage.getItem('foodieland-theme') as 'light' | 'dark' | null
-    if (saved) {
-      setTheme(saved)
-      return
-    }
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    setTheme(prefersDark ? 'dark' : 'light')
-
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-    const handler = (e: MediaQueryListEvent) => {
-      if (!localStorage.getItem('foodieland-theme')) {
-        setTheme(e.matches ? 'dark' : 'light')
-      }
-    }
-    mediaQuery.addEventListener('change', handler)
-    return () => mediaQuery.removeEventListener('change', handler)
-  }, [])
+  const theme = useTheme()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -51,10 +34,15 @@ export default function LoginPage() {
       })
       const data = await res.json()
       if (!res.ok) {
-        setError(data.message || 'Invalid email or password.')
+        setError(
+          data.message ||
+            (data.errors && Object.values(data.errors).flat()[0]) ||
+            'Invalid email or password.'
+        )
         return
       }
-      router.push('/dashboard')
+      saveSession(data)
+      router.push('/orders')
     } catch {
       setError('Something went wrong. Please try again.')
     } finally {
@@ -214,7 +202,7 @@ export default function LoginPage() {
         </form>
 
         <p className={`text-center text-[0.82rem] mt-5 ${dark ? 'text-white/35' : 'text-black/40'}`}>
-          Don't have an account?{' '}
+          Don&apos;t have an account?{' '}
           <a href="/register" className="text-orange-600 hover:underline font-medium">
             Sign up
           </a>

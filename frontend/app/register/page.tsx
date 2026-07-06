@@ -1,10 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Eye, EyeOff, ChefHat } from 'lucide-react'
 
 import PageLoader from '@/components/ui/PageLoader'
+import { useTheme } from '@/hooks/useTheme'
+import { saveSession } from '@/lib/auth'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -18,26 +20,7 @@ export default function LoginPage() {
   const [remember, setRemember] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const [theme, setTheme] = useState<'light' | 'dark'|null>(null)
-
-  useEffect(() => {
-    const saved = localStorage.getItem('foodieland-theme') as 'light' | 'dark' | null
-    if (saved) {
-      setTheme(saved)
-      return
-    }
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    setTheme(prefersDark ? 'dark' : 'light')
-
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-    const handler = (e: MediaQueryListEvent) => {
-      if (!localStorage.getItem('foodieland-theme')) {
-        setTheme(e.matches ? 'dark' : 'light')
-      }
-    }
-    mediaQuery.addEventListener('change', handler)
-    return () => mediaQuery.removeEventListener('change', handler)
-  }, [])
+  const theme = useTheme()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -55,14 +38,23 @@ export default function LoginPage() {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ firstName, lastName, email, password }),
+        body: JSON.stringify({
+          name: `${firstName} ${lastName}`.trim(),
+          email,
+          password,
+        }),
       })
       const data = await res.json()
       if (!res.ok) {
-        setError(data.message || 'Something went wrong.')
+        setError(
+          data.message ||
+            (data.errors && Object.values(data.errors).flat()[0]) ||
+            'Something went wrong.'
+        )
         return
       }
-      router.push('/dashboard')
+      saveSession(data)
+      router.push('/orders')
     } catch {
       setError('Something went wrong. Please try again.')
     } finally {
