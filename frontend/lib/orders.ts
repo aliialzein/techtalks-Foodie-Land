@@ -1,9 +1,9 @@
 // Client-side types + API access for the Orders feature.
 //
 // The types mirror the backend `OrderWithDetails` shape
-// (backend/src/modules/order), and every request funnels through a single
-// `request()` helper so error handling lives in exactly one place on the client
-// — the same "one funnel" idea as the backend's `handleError`.
+// (backend/src/modules/order); requests go through the shared apiRequest helper.
+
+import { apiRequest } from "./api";
 
 export type OrderStatus =
   | "PENDING"
@@ -32,36 +32,17 @@ export interface Order {
   restaurant: { id: string; name: string };
 }
 
-async function request<T>(input: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(input, {
-    headers: { "Content-Type": "application/json" },
-    ...init,
-  });
-
-  const data: unknown = await res.json().catch(() => null);
-
-  if (!res.ok) {
-    // The backend surfaces errors as `{ error: string }` (see handleError).
-    const message =
-      (data as { error?: string } | null)?.error ??
-      "Something went wrong. Please try again.";
-    throw new Error(message);
-  }
-
-  return data as T;
-}
-
 export function getOrders(userId?: string): Promise<Order[]> {
   const query = userId ? `?userId=${encodeURIComponent(userId)}` : "";
-  return request<Order[]>(`/api/orders${query}`);
+  return apiRequest<Order[]>(`/api/orders${query}`);
 }
 
 export function getOrder(id: string): Promise<Order> {
-  return request<Order>(`/api/orders/${id}`);
+  return apiRequest<Order>(`/api/orders/${id}`);
 }
 
 export function cancelOrder(id: string): Promise<Order> {
-  return request<Order>(`/api/orders/${id}/cancel`, { method: "POST" });
+  return apiRequest<Order>(`/api/orders/${id}/cancel`, { method: "POST" });
 }
 
 // Mirrors the backend transition rules: an order can only be cancelled while it
