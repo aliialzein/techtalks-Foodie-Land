@@ -26,8 +26,9 @@ export type OrderItemCreateData = {
 };
 
 export class OrderRepository {
-  static getAll() {
+  static getAll(userId?: string) {
     return prisma.order.findMany({
+      where: userId ? { userId } : undefined,
       include: orderDetailsInclude,
       orderBy: { createdAt: "desc" },
     });

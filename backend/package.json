@@ -42,5 +42,8 @@
     "vite-tsconfig-paths": "^6.1.1",
     "vitest": "^4.1.9"
   },
+  "prisma": {
+    "seed": "node prisma/seed.mjs"
+  },
   "type": "module"
 }
