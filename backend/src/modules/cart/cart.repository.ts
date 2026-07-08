@@ -10,6 +10,7 @@ const cartInclude = {
           name: true,
           price: true,
           imageUrl: true,
+          restaurantId: true,
         },
       },
     },

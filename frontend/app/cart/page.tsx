@@ -196,14 +196,12 @@ export default function CartPage() {
             </div>
 
             <div className="mt-4 flex flex-col gap-2 sm:flex-row-reverse">
-              <button
-                type="button"
-                disabled
-                title="Checkout is coming in the next update"
-                className="inline-flex flex-1 cursor-not-allowed items-center justify-center gap-1.5 rounded-xl bg-linear-to-r from-orange-600 to-orange-400 py-2.5 text-sm font-semibold text-white opacity-60"
+              <a
+                href="/checkout"
+                className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-linear-to-r from-orange-600 to-orange-400 py-2.5 text-sm font-semibold text-white shadow-[0_4px_20px_rgba(234,88,12,0.35)] transition-all hover:-translate-y-px"
               >
                 Proceed to checkout <ArrowRight className="h-3.5 w-3.5" />
-              </button>
+              </a>
               <button
                 type="button"
                 onClick={() => clear()}
@@ -217,10 +215,6 @@ export default function CartPage() {
                 Clear cart
               </button>
             </div>
-
-            <p className={`mt-2 text-center text-[0.7rem] ${mutedText}`}>
-              Checkout is coming in the next update.
-            </p>
           </div>
         )}
       </div>
