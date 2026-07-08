@@ -45,7 +45,13 @@ const cartItem = {
   quantity: 2,
   unitPriceSnapshot: 10.5,
   createdAt: new Date("2026-01-01T00:00:00.000Z"),
-  food: { id: foodId, name: "Classic Burger", price: 10.5, imageUrl: null },
+  food: {
+    id: foodId,
+    name: "Classic Burger",
+    price: 10.5,
+    imageUrl: null,
+    restaurantId: "bbbbbbbb-2222-4222-8222-bbbbbbbbbbbb",
+  },
 };
 
 const emptyCart = { id: cartId, userId, items: [] as (typeof cartItem)[] };

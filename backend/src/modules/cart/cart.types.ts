@@ -10,6 +10,7 @@ export type CartWithItems = Prisma.CartGetPayload<{
             name: true;
             price: true;
             imageUrl: true;
+            restaurantId: true;
           };
         };
       };
