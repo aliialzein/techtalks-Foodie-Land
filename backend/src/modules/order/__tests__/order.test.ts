@@ -98,11 +98,33 @@ describe("order controller", () => {
     const response = await getOrders(userId);
 
     expect(response.status).toBe(200);
-    expect(OrderRepository.getAll).toHaveBeenCalledWith(userId);
+    expect(OrderRepository.getAll).toHaveBeenCalledWith({
+      userId,
+      restaurantId: undefined,
+    });
+  });
+
+  it("filters orders by restaurantId when provided", async () => {
+    vi.mocked(OrderRepository.getAll).mockResolvedValue([order]);
+
+    const response = await getOrders(undefined, restaurantId);
+
+    expect(response.status).toBe(200);
+    expect(OrderRepository.getAll).toHaveBeenCalledWith({
+      userId: undefined,
+      restaurantId,
+    });
   });
 
   it("rejects an invalid userId filter", async () => {
     const response = await getOrders("not-a-uuid");
+
+    expect(response.status).toBe(400);
+    expect(OrderRepository.getAll).not.toHaveBeenCalled();
+  });
+
+  it("rejects an invalid restaurantId filter", async () => {
+    const response = await getOrders(undefined, "not-a-uuid");
 
     expect(response.status).toBe(400);
     expect(OrderRepository.getAll).not.toHaveBeenCalled();

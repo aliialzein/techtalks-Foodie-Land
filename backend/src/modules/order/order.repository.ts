@@ -25,10 +25,19 @@ export type OrderItemCreateData = {
   quantity: number;
 };
 
+export type OrderFilters = {
+  userId?: string;
+  restaurantId?: string;
+};
+
 export class OrderRepository {
-  static getAll(userId?: string) {
+  static getAll(filters: OrderFilters = {}) {
+    const { userId, restaurantId } = filters;
     return prisma.order.findMany({
-      where: userId ? { userId } : undefined,
+      where: {
+        ...(userId ? { userId } : {}),
+        ...(restaurantId ? { restaurantId } : {}),
+      },
       include: orderDetailsInclude,
       orderBy: { createdAt: "desc" },
     });

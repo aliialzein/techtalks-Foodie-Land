@@ -42,6 +42,12 @@ export class UnauthorizedError extends AppError {
   }
 }
 
+export class ForbiddenError extends AppError {
+  constructor(message = "Forbidden") {
+    super({ statusCode: 403, message });
+  }
+}
+
 export class NotFoundError extends AppError {
   constructor(resource: string, id?: string) {
     super({

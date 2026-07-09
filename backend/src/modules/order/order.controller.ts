@@ -4,14 +4,21 @@ import { OrderService } from "./order.service";
 import {
   createOrderSchema,
   orderIdSchema,
+  restaurantIdSchema,
   updateOrderStatusSchema,
   userIdSchema,
 } from "./order.validation";
 
-export async function getOrders(userId?: string) {
+export async function getOrders(userId?: string, restaurantId?: string) {
   try {
     const filterUserId = userId ? userIdSchema.parse(userId) : undefined;
-    const data = await OrderService.getAll(filterUserId);
+    const filterRestaurantId = restaurantId
+      ? restaurantIdSchema.parse(restaurantId)
+      : undefined;
+    const data = await OrderService.getAll({
+      userId: filterUserId,
+      restaurantId: filterRestaurantId,
+    });
     return jsonResponse(data, 200);
   } catch (error) {
     return handleError(error);
