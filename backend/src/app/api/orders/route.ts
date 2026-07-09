@@ -3,8 +3,11 @@ import { createOrder, getOrders } from "@/modules/order/order.controller";
 export const dynamic = "force-dynamic";
 
 export async function GET(req: Request) {
-  const userId = new URL(req.url).searchParams.get("userId");
-  return getOrders(userId ?? undefined);
+  const params = new URL(req.url).searchParams;
+  return getOrders(
+    params.get("userId") ?? undefined,
+    params.get("restaurantId") ?? undefined,
+  );
 }
 
 export async function POST(req: Request) {

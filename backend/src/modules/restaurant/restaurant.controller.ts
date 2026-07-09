@@ -3,13 +3,15 @@ import { handleError, jsonResponse } from "../../util/errors";
 import { RestaurantService } from "./restaurant.service";
 import {
   createRestaurantSchema,
+  ownerIdSchema,
   restaurantIdSchema,
   updateRestaurantSchema,
 } from "./restaurant.validation";
 
-export async function getRestaurants() {
+export async function getRestaurants(ownerId?: string) {
   try {
-    const data = await RestaurantService.getAll();
+    const filterOwnerId = ownerId ? ownerIdSchema.parse(ownerId) : undefined;
+    const data = await RestaurantService.getAll(filterOwnerId);
     return jsonResponse(data, 200);
   } catch (error) {
     return handleError(error);

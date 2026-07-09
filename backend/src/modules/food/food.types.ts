@@ -10,3 +10,20 @@ export type FoodWithRestaurant = Prisma.FoodGetPayload<{
     };
   };
 }>;
+
+export type CreateFoodInput = {
+  restaurantId: string;
+  name: string;
+  price: number;
+  description?: string;
+  imageUrl?: string;
+  isAvailable?: boolean;
+};
+
+export type UpdateFoodInput = {
+  name?: string;
+  price?: number;
+  description?: string | null;
+  imageUrl?: string | null;
+  isAvailable?: boolean;
+};

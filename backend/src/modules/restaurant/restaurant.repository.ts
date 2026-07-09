@@ -2,8 +2,9 @@
 import type { CreateRestaurantInput, UpdateRestaurantInput } from "./restaurant.types";
 
 export class RestaurantRepository {
-  static getAll() {
+  static getAll(ownerId?: string) {
     return prisma.restaurant.findMany({
+      where: ownerId ? { ownerId } : undefined,
       include: {
         owner: {
           select: {
@@ -12,6 +13,7 @@ export class RestaurantRepository {
           },
         },
       },
+      orderBy: { createdAt: "desc" },
     });
   }
 

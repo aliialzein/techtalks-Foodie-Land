@@ -4,6 +4,8 @@ export const orderIdSchema = z.string().uuid();
 
 export const userIdSchema = z.string().uuid();
 
+export const restaurantIdSchema = z.string().uuid();
+
 export const orderStatusSchema = z.enum([
   "PENDING",
   "PREPARING",

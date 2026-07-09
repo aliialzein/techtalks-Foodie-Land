@@ -2,6 +2,8 @@
 
 export const restaurantIdSchema = z.string().uuid();
 
+export const ownerIdSchema = z.string().uuid();
+
 export const updateRestaurantSchema = z
   .object({
     name: z.string().min(2).optional(),

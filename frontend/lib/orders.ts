@@ -37,6 +37,23 @@ export function getOrders(userId?: string): Promise<Order[]> {
   return apiRequest<Order[]>(`/api/orders${query}`);
 }
 
+// Owner view: all orders placed at a restaurant.
+export function getRestaurantOrders(restaurantId: string): Promise<Order[]> {
+  return apiRequest<Order[]>(
+    `/api/orders?restaurantId=${encodeURIComponent(restaurantId)}`,
+  );
+}
+
+export function updateOrderStatus(
+  orderId: string,
+  status: OrderStatus,
+): Promise<Order> {
+  return apiRequest<Order>(`/api/orders/${orderId}`, {
+    method: "PATCH",
+    body: JSON.stringify({ status }),
+  });
+}
+
 export function getOrder(id: string): Promise<Order> {
   return apiRequest<Order>(`/api/orders/${id}`);
 }

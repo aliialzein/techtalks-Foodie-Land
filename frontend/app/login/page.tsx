@@ -42,7 +42,7 @@ export default function LoginPage() {
         return
       }
       saveSession(data)
-      router.push('/menu')
+      router.push(data.user?.role === 'OWNER' ? '/owner' : '/menu')
     } catch {
       setError('Something went wrong. Please try again.')
     } finally {

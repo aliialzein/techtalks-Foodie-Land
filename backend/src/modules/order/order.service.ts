@@ -1,6 +1,6 @@
 import type { OrderStatus } from "@/generated/prisma";
 import { ConflictError, NotFoundError } from "../../util/errors";
-import { OrderRepository } from "./order.repository";
+import { OrderRepository, type OrderFilters } from "./order.repository";
 import type {
   CreateOrderInput,
   OrderItemForTotal,
@@ -16,8 +16,8 @@ const ORDER_STATUS_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
 };
 
 export class OrderService {
-  static getAll(userId?: string): Promise<OrderWithDetails[]> {
-    return OrderRepository.getAll(userId);
+  static getAll(filters: OrderFilters = {}): Promise<OrderWithDetails[]> {
+    return OrderRepository.getAll(filters);
   }
 
   static async getById(id: string): Promise<OrderWithDetails> {

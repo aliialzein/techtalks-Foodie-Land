@@ -8,8 +8,8 @@ import type {
 } from "./restaurant.types";
 
 export class RestaurantService {
-  static getAll(): Promise<RestaurantWithOwner[]> {
-    return RestaurantRepository.getAll();
+  static getAll(ownerId?: string): Promise<RestaurantWithOwner[]> {
+    return RestaurantRepository.getAll(ownerId);
   }
 
   static async getById(id: string): Promise<Restaurant> {
