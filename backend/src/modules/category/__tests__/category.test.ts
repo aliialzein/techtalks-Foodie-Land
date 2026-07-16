@@ -9,6 +9,7 @@ import {
 } from "../category.controller";
 
 import { CategoryRepository } from "../category.repository";
+import { success } from "zod";
 
 vi.mock("../category.repository", () => ({
   CategoryRepository: {
@@ -87,7 +88,8 @@ describe("category controller", () => {
     expect(response.status).toBe(404);
 
     expect(await readJson(response)).toEqual({
-      error: "Category not found",
+      success: false,
+      message: "Category not found",
     });
   });
 
@@ -101,7 +103,8 @@ describe("category controller", () => {
     expect(response.status).toBe(500);
 
     expect(await readJson(response)).toEqual({
-      error: "Internal server error",
+      success: false,
+      message: "Internal server error",
     });
   });
 
@@ -154,7 +157,8 @@ describe("category controller", () => {
       expect(response.status).toBe(404);
 
       expect(await readJson(response)).toEqual({
-        error: "Restaurant not found",
+        success: false,
+        message: "Restaurant not found",
       });
 
       expect(CategoryRepository.create).not.toHaveBeenCalled();

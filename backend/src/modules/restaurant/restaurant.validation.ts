@@ -17,6 +17,5 @@ export const createRestaurantSchema =
     ownerId: z.string().uuid(),
     name: z.string().min(2).max(100),
     description: z.string().max(500).optional(),
-    isActive: z.boolean().optional(),
   })
   .strict();

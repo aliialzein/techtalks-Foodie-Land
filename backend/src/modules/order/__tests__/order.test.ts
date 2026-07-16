@@ -9,6 +9,7 @@ import {
 } from "../order.controller";
 import { OrderRepository } from "../order.repository";
 import { OrderService } from "../order.service";
+import { success } from "zod";
 
 vi.mock("../order.repository", () => ({
   OrderRepository: {
@@ -154,7 +155,9 @@ describe("order controller", () => {
     const response = await getOrder(orderId);
 
     expect(response.status).toBe(404);
-    expect(await readJson(response)).toEqual({ error: "Order not found" });
+    expect(await readJson(response)).toEqual({ 
+      success: false,
+      message: "Order not found" });
   });
 
   it("returns 500 (without crashing) on an unexpected repository error", async () => {
@@ -165,7 +168,9 @@ describe("order controller", () => {
     const response = await getOrders();
 
     expect(response.status).toBe(500);
-    expect(await readJson(response)).toEqual({ error: "Internal server error" });
+    expect(await readJson(response)).toEqual({ 
+      success: false,
+      message: "Internal server error" });
   });
 
   describe("createOrder", () => {
@@ -229,7 +234,9 @@ describe("order controller", () => {
       const response = await createOrder(makeRequest(validPayload));
 
       expect(response.status).toBe(404);
-      expect(await readJson(response)).toEqual({ error: "User not found" });
+      expect(await readJson(response)).toEqual({ 
+        success: false,
+        message: "User not found" });
       expect(OrderRepository.create).not.toHaveBeenCalled();
     });
 
@@ -241,7 +248,8 @@ describe("order controller", () => {
 
       expect(response.status).toBe(404);
       expect(await readJson(response)).toEqual({
-        error: "Restaurant not found",
+        success: false,
+        message: "Restaurant not found",
       });
       expect(OrderRepository.create).not.toHaveBeenCalled();
     });
@@ -258,7 +266,9 @@ describe("order controller", () => {
       const response = await createOrder(makeRequest(validPayload));
 
       expect(response.status).toBe(404);
-      expect(await readJson(response)).toEqual({ error: "Food not found" });
+      expect(await readJson(response)).toEqual({ 
+        success: false,
+        message: "Food not found" });
       expect(OrderRepository.create).not.toHaveBeenCalled();
     });
 
@@ -432,7 +442,7 @@ describe("order controller", () => {
     const response = await deleteOrder(orderId);
 
     expect(response.status).toBe(200);
-    expect(await readJson(response)).toEqual({ message: "Deleted" });
+    expect(await readJson(response)).toEqual({message: "Deleted" });
   });
 
   it("returns 404 when deleting a missing order", async () => {

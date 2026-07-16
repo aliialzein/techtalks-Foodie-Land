@@ -137,7 +137,10 @@ exports.Prisma.RestaurantScalarFieldEnum = {
   ownerId: 'ownerId',
   name: 'name',
   description: 'description',
-  isActive: 'isActive',
+  status: 'status',
+  approvedAt: 'approvedAt',
+  approvedBy: 'approvedBy',
+  rejectionReason: 'rejectionReason',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -234,6 +237,12 @@ exports.UserRole = exports.$Enums.UserRole = {
   CUSTOMER: 'CUSTOMER',
   OWNER: 'OWNER',
   ADMIN: 'ADMIN'
+};
+
+exports.RestaurantStatus = exports.$Enums.RestaurantStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
 };
 
 exports.OrderStatus = exports.$Enums.OrderStatus = {

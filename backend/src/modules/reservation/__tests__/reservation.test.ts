@@ -30,7 +30,7 @@ const reservation = {
   restaurantId,
   dateTime: new Date("2026-07-20T18:00:00.000Z"),
   peopleCount: 4,
-  status: "PENDING",
+  status: "PENDING" as const,
   createdAt: new Date("2026-07-01T00:00:00.000Z"),
   user: {
     id: userId,
@@ -91,7 +91,8 @@ describe("reservation controller", () => {
 
     expect(response.status).toBe(404);
     expect(await readJson(response)).toEqual({
-      error: "Reservation not found",
+      success: false,
+      message: "Reservation not found",
     });
   });
 
@@ -104,7 +105,8 @@ describe("reservation controller", () => {
 
     expect(response.status).toBe(500);
     expect(await readJson(response)).toEqual({
-      error: "Internal server error",
+      success: false,
+      message: "Internal server error",
     });
   });
 
@@ -166,7 +168,8 @@ describe("reservation controller", () => {
 
       expect(response.status).toBe(404);
       expect(await readJson(response)).toEqual({
-        error: "User not found",
+        success: false,
+        message: "User not found",
       });
 
       expect(ReservationRepository.create).not.toHaveBeenCalled();
@@ -190,7 +193,8 @@ describe("reservation controller", () => {
 
       expect(response.status).toBe(404);
       expect(await readJson(response)).toEqual({
-        error: "Restaurant not found",
+        success: false,
+        message: "Restaurant not found",
       });
 
       expect(ReservationRepository.create).not.toHaveBeenCalled();
