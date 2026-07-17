@@ -11,11 +11,13 @@ const SESSION_KEY = "foodieland-session";
 // *other* tabs), so `useCurrentUser` subscribers update immediately after login.
 const SESSION_EVENT = "foodieland-session-change";
 
+export type UserRole = "CUSTOMER" | "OWNER" | "ADMIN";
+
 export interface SessionUser {
   id: string;
   name: string;
   email: string;
-  role?: string;
+  role?: UserRole;
 }
 
 export interface Session {
@@ -26,6 +28,12 @@ export interface Session {
 export function saveSession(session: Session): void {
   if (typeof window === "undefined") return;
   localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+
+  // Only the JWT goes in the cookie now — middleware verifies its
+  // signature instead of trusting a client-editable role field.
+  document.cookie =
+    `foodieland-token=${session.token}; path=/; max-age=604800; SameSite=Lax`;
+
   window.dispatchEvent(new Event(SESSION_EVENT));
 }
 
@@ -35,8 +43,21 @@ export function clearSession(): void {
   window.dispatchEvent(new Event(SESSION_EVENT));
 }
 
+export function getSession(): Session | null {
+  if (typeof window === "undefined") return null;
+
+  const raw = localStorage.getItem(SESSION_KEY);
+  if (!raw) return null;
+
+  try {
+    return JSON.parse(raw) as Session;
+  } catch {
+    return null;
+  }
+}
+
 export function getCurrentUser(): SessionUser | null {
-  return readUser(typeof window === "undefined" ? null : localStorage.getItem(SESSION_KEY));
+  return getSession()?.user ?? null;
 }
 
 function readUser(raw: string | null): SessionUser | null {
@@ -77,4 +98,26 @@ function subscribe(onChange: () => void): () => void {
 
 export function useCurrentUser(): SessionUser | null {
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+}
+
+export function getToken(): string | null {
+  return getSession()?.token ?? null;
+}
+
+export function isAuthenticated(): boolean {
+  return getSession() !== null;
+}
+
+export function hasRole(...roles: UserRole[]): boolean {
+  const role = getCurrentUser()?.role;
+  return role ? roles.includes(role) : false;
+}
+
+export function logout(): void {
+  clearSession();
+
+  if (typeof document !== "undefined") {
+    document.cookie =
+      "foodieland-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+  }
 }
