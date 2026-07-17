@@ -1,23 +1,32 @@
-// Shared fetch wrapper for the backend API: sends/receives JSON and surfaces
-// the backend's `{ error }` message as a thrown Error. One funnel for every
-// client module (orders, foods, cart), mirroring the backend's handleError.
+import { getToken } from "./auth";
 
 export async function apiRequest<T>(
   input: string,
   init?: RequestInit,
 ): Promise<T> {
+  const token = getToken();
+
+  const headers = new Headers(init?.headers);
+
+  headers.set("Content-Type", "application/json");
+
+  if (token) {
+    headers.set("Authorization", `Bearer ${token}`);
+  }
+
   const res = await fetch(input, {
-    headers: { "Content-Type": "application/json" },
     ...init,
+    headers,
   });
 
-  const data: unknown = await res.json().catch(() => null);
+  const data = await res.json().catch(() => null);
 
   if (!res.ok) {
-    const message =
-      (data as { error?: string } | null)?.error ??
-      "Something went wrong. Please try again.";
-    throw new Error(message);
+    throw new Error(
+      data?.message ??
+      data?.error ??
+      "Something went wrong. Please try again."
+    );
   }
 
   return data as T;
