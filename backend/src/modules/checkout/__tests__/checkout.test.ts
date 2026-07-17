@@ -148,7 +148,8 @@ describe("checkout controller", () => {
     const response = await placeOrder(makeRequest({ userId }));
 
     expect(response.status).toBe(500);
-    expect(await readJson(response)).toEqual({ error: "Internal server error" });
+    expect(await readJson(response)).toEqual({"message": "Internal server error",
+   "success": false, });
     expect(CartRepository.clearItems).not.toHaveBeenCalled();
   });
 });

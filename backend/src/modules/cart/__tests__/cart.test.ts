@@ -7,6 +7,7 @@ import {
   updateCartItem,
 } from "../cart.controller";
 import { CartRepository } from "../cart.repository";
+import { success } from "zod";
 
 vi.mock("../cart.repository", () => ({
   CartRepository: {
@@ -103,7 +104,9 @@ describe("cart controller", () => {
       const response = await getCart(userId);
 
       expect(response.status).toBe(404);
-      expect(await readJson(response)).toEqual({ error: "User not found" });
+      expect(await readJson(response)).toEqual({ 
+        success: false,
+        message: "User not found" });
     });
   });
 
@@ -156,7 +159,9 @@ describe("cart controller", () => {
       );
 
       expect(response.status).toBe(404);
-      expect(await readJson(response)).toEqual({ error: "Food not found" });
+      expect(await readJson(response)).toEqual({ 
+        success: false,
+        message: "Food not found" });
       expect(CartRepository.createItem).not.toHaveBeenCalled();
     });
 
@@ -210,7 +215,9 @@ describe("cart controller", () => {
       );
 
       expect(response.status).toBe(404);
-      expect(await readJson(response)).toEqual({ error: "Cart item not found" });
+      expect(await readJson(response)).toEqual({ 
+        success: false,
+        message: "Cart item not found" });
       expect(CartRepository.updateItemQuantity).not.toHaveBeenCalled();
     });
   });

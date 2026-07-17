@@ -1,9 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+
+process.env.JWT_SECRET = "test-secret";
+import { RestaurantStatus } from "@/generated/prisma";
+import { createToken } from "../../auth/token";
 import {
+  approveRestaurant,
   createRestaurant,
   deleteRestaurant,
+  getPendingRestaurants,
   getRestaurant,
   getRestaurants,
+  rejectRestaurant,
   updateRestaurant,
 } from "../restaurant.controller";
 import { RestaurantRepository } from "../restaurant.repository";
@@ -16,6 +23,9 @@ vi.mock("../restaurant.repository", () => ({
     create: vi.fn(),
     update: vi.fn(),
     delete: vi.fn(),
+    getPending: vi.fn(),
+    approve: vi.fn(),
+    reject: vi.fn(),
   },
 }));
 
@@ -26,18 +36,23 @@ const restaurant = {
   ownerId,
   name: "Foodie Land",
   description: "Fresh meals",
-  isActive: true,
+  status: RestaurantStatus.PENDING,
+  approvedAt: null,
+  approvedBy: null,
+  rejectionReason: null,
   createdAt: new Date("2026-01-01T00:00:00.000Z"),
   updatedAt: new Date("2026-01-01T00:00:00.000Z"),
   owner: {
     id: ownerId,
     name: "Owner Name",
+    email: "owner@test.com"
   },
 };
 
 async function readJson(response: Response) {
   return response.json() as Promise<unknown>;
 }
+
 
 describe("restaurant controller", () => {
   beforeEach(() => {
@@ -79,7 +94,10 @@ describe("restaurant controller", () => {
     const response = await getRestaurant(restaurantId);
 
     expect(response.status).toBe(404);
-    expect(await readJson(response)).toEqual({ error: "Restaurant not found" });
+    expect(await readJson(response)).toEqual({
+    success: false,
+    message: "Restaurant not found",
+  });
   });
 
   it("returns 500 (without crashing) on an unexpected repository error", async () => {
@@ -90,7 +108,10 @@ describe("restaurant controller", () => {
     const response = await getRestaurants();
 
     expect(response.status).toBe(500);
-    expect(await readJson(response)).toEqual({ error: "Internal server error" });
+    expect(await readJson(response)).toEqual({
+    success: false,
+    message: "Internal server error",
+  });
   });
 
   describe("createRestaurant", () => {
@@ -118,12 +139,14 @@ describe("restaurant controller", () => {
       expect(await readJson(response)).toEqual(
         expect.objectContaining({ id: restaurantId }),
       );
-      expect(RestaurantRepository.create).toHaveBeenCalledWith({
-        ownerId,
-        name: "Foodie Land",
-        description: "Fresh meals",
-        isActive: true,
-      });
+      expect(RestaurantRepository.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          ownerId,
+          name: "Foodie Land",
+          description: "Fresh meals",
+          rejectionReason: null,
+        }),
+      );
     });
 
     it("creates a restaurant without optional fields", async () => {
@@ -135,10 +158,38 @@ describe("restaurant controller", () => {
       const response = await createRestaurant(request);
 
       expect(response.status).toBe(201);
-      expect(RestaurantRepository.create).toHaveBeenCalledWith({
+      expect(RestaurantRepository.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          ownerId,
+          name: "Foodie Land",
+        }),
+      );
+    });
+
+    it("creates a restaurant in pending state and ignores client-controlled approval fields", async () => {
+      vi.mocked(RestaurantRepository.ownerExists).mockResolvedValue({ id: ownerId });
+      vi.mocked(RestaurantRepository.create).mockResolvedValue(restaurant);
+
+      const request = makeRequest({
         ownerId,
         name: "Foodie Land",
+        description: "Fresh meals",
+        status: "APPROVED",
+        rejectionReason: "Do not use",
+        isActive: false,
       });
+
+      const response = await createRestaurant(request);
+
+      expect(response.status).toBe(201);
+      expect(RestaurantRepository.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          ownerId,
+          name: "Foodie Land",
+          description: "Fresh meals",
+          rejectionReason: null,
+        }),
+      );
     });
 
     it("returns 404 when the owner does not exist", async () => {
@@ -149,7 +200,10 @@ describe("restaurant controller", () => {
       const response = await createRestaurant(request);
 
       expect(response.status).toBe(404);
-      expect(await readJson(response)).toEqual({ error: "Owner not found" });
+      expect(await readJson(response)).toEqual({
+      success: false,
+      message: "Owner not found",
+    });
       expect(RestaurantRepository.create).not.toHaveBeenCalled();
     });
 
@@ -248,6 +302,84 @@ describe("restaurant controller", () => {
     });
   });
 
+  it("returns pending restaurants", async () => {
+    vi.mocked(RestaurantRepository.getPending).mockResolvedValue([restaurant]);
+
+    const token = createToken(ownerId, "owner@example.com", "ADMIN");
+    const request = new Request("http://localhost/api/restaurants/pending", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const response = await getPendingRestaurants(request);
+
+    expect(response.status).toBe(200);
+    expect(await readJson(response)).toEqual([
+      expect.objectContaining({ id: restaurantId }),
+    ]);
+  });
+
+  it("requires admin auth to approve a restaurant", async () => {
+    vi.mocked(RestaurantRepository.getById).mockResolvedValue(restaurant);
+
+    const request = new Request("http://localhost/api/restaurants/" + restaurantId, {
+      method: "PATCH",
+    });
+
+    const response = await approveRestaurant(request, restaurantId);
+
+    expect(response.status).toBe(401);
+    expect(RestaurantRepository.approve).not.toHaveBeenCalled();
+  });
+
+  it("approves a restaurant", async () => {
+    vi.mocked(RestaurantRepository.getById).mockResolvedValue(restaurant);
+    vi.mocked(RestaurantRepository.approve).mockResolvedValue({
+      ...restaurant,
+      status: "APPROVED",
+    });
+
+    const token = createToken(ownerId, "owner@example.com", "ADMIN");
+    const request = new Request("http://localhost/api/restaurants/" + restaurantId, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const response = await approveRestaurant(request, restaurantId);
+
+    expect(response.status).toBe(200);
+    expect(RestaurantRepository.approve).toHaveBeenCalledWith(restaurantId);
+  });
+
+  it("rejects a restaurant with a reason", async () => {
+    vi.mocked(RestaurantRepository.getById).mockResolvedValue(restaurant);
+    vi.mocked(RestaurantRepository.reject).mockResolvedValue({
+      ...restaurant,
+      status: "REJECTED",
+      rejectionReason: "Incomplete details",
+    });
+
+    const token = createToken(ownerId, "owner@example.com", "ADMIN");
+    const request = new Request("http://localhost/api/restaurants/" + restaurantId, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const response = await rejectRestaurant(request, restaurantId, {
+      rejectionReason: "Incomplete details",
+    });
+
+    expect(response.status).toBe(200);
+    expect(RestaurantRepository.reject).toHaveBeenCalledWith(restaurantId, {
+      rejectionReason: "Incomplete details",
+    });
+  });
+
   it("rejects invalid update payloads", async () => {
     const request = new Request("http://localhost/api/restaurants/" + restaurantId, {
       method: "PATCH",
@@ -267,6 +399,8 @@ describe("restaurant controller", () => {
     const response = await deleteRestaurant(restaurantId);
 
     expect(response.status).toBe(200);
+    // Success path returns straight from the controller (`jsonResponse({ message: "Deleted" }, 200)`),
+    // not through handleError, so there is no `success` field here.
     expect(await readJson(response)).toEqual({ message: "Deleted" });
   });
 

@@ -7,6 +7,7 @@ import {Eye,EyeOff,ChefHat} from 'lucide-react'
 import PageLoader from '@/components/ui/PageLoader'
 import { useTheme } from '@/hooks/useTheme'
 import { saveSession } from '@/lib/auth'
+import { redirectAfterLogin } from '@/lib/redirects'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -42,7 +43,7 @@ export default function LoginPage() {
         return
       }
       saveSession(data)
-      router.push(data.user?.role === 'OWNER' ? '/owner' : '/menu')
+      redirectAfterLogin(router, data.user)
     } catch {
       setError('Something went wrong. Please try again.')
     } finally {

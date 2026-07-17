@@ -46,26 +46,36 @@ describe("handleError", () => {
     const response = handleError(result.success ? null : result.error);
 
     expect(response.status).toBe(400);
+
     const body = (await readJson(response)) as {
-      error: string;
-      issues: unknown[];
+      success: boolean;
+      message: string;
+      errors: unknown[];
     };
-    expect(body.error).toBe("Validation failed");
-    expect(Array.isArray(body.issues)).toBe(true);
+
+    expect(body.success).toBe(false);
+    expect(body.message).toBe("Validation failed");
+    expect(Array.isArray(body.errors)).toBe(true);
   });
 
   it("maps a SyntaxError (malformed JSON) to 400", async () => {
     const response = handleError(new SyntaxError("Unexpected token"));
 
     expect(response.status).toBe(400);
-    expect(await readJson(response)).toEqual({ error: "Validation failed" });
+    expect(await readJson(response)).toEqual({
+      success: false,
+      message: "Malformed JSON body",
+    });
   });
 
   it("maps an AppError to its status code and public message", async () => {
     const response = handleError(new NotFoundError("Order", "abc-123"));
 
     expect(response.status).toBe(404);
-    expect(await readJson(response)).toEqual({ error: "Order not found" });
+    expect(await readJson(response)).toEqual({
+      success: false,
+      message: "Order not found",
+    });
   });
 
   it("maps a ConflictError to 409 with its detailed message", async () => {
@@ -75,7 +85,8 @@ describe("handleError", () => {
 
     expect(response.status).toBe(409);
     expect(await readJson(response)).toEqual({
-      error: "Cannot transition from A to B",
+      success: false,
+      message: "Cannot transition from A to B",
     });
   });
 
@@ -83,14 +94,20 @@ describe("handleError", () => {
     const response = handleError(new Error("database connection lost"));
 
     expect(response.status).toBe(500);
-    expect(await readJson(response)).toEqual({ error: "Internal server error" });
+    expect(await readJson(response)).toEqual({
+      success: false,
+      message: "Internal server error",
+    });
   });
 
   it("does not crash on a non-Error thrown value", async () => {
     const response = handleError("a plain string was thrown");
 
     expect(response.status).toBe(500);
-    expect(await readJson(response)).toEqual({ error: "Internal server error" });
+    expect(await readJson(response)).toEqual({
+      success: false,
+      message: "Internal server error",
+    });
   });
 
   it("does not crash on null/undefined thrown values", async () => {

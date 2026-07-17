@@ -23,19 +23,22 @@ model User {
 }
 
 model Restaurant {
-  id           String               @id @default(uuid())
-  ownerId      String
-  name         String
-  description  String?
-  isActive     Boolean              @default(true)
-  createdAt    DateTime             @default(now())
-  updatedAt    DateTime             @updatedAt
-  foods        Food[]
-  categories   FoodCategory[]
-  orders       Order[]
-  reservations Reservation[]
-  owner        User                 @relation(fields: [ownerId], references: [id])
-  menuGroups   RestaurantCategory[]
+  id              String               @id @default(uuid())
+  ownerId         String
+  name            String
+  description     String?
+  status          RestaurantStatus     @default(PENDING)
+  approvedAt      DateTime?
+  approvedBy      String?
+  rejectionReason String?
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  foods           Food[]
+  categories      FoodCategory[]
+  orders          Order[]
+  reservations    Reservation[]
+  owner           User                 @relation(fields: [ownerId], references: [id])
+  menuGroups      RestaurantCategory[]
 }
 
 model RestaurantCategory {
@@ -138,6 +141,12 @@ enum UserRole {
   CUSTOMER
   OWNER
   ADMIN
+}
+
+enum RestaurantStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 enum OrderStatus {

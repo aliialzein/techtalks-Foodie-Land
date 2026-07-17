@@ -1,3 +1,4 @@
+import { handlePrismaError } from "@/middleware/error.middleware";
 import { ZodError } from "zod";
 
 /**
@@ -77,20 +78,44 @@ export function jsonResponse(body: unknown, status: number) {
  * request). Unknown errors are deliberately masked behind a generic 500 so
  * internal details are never leaked to the client.
  */
-export function handleError(error: unknown): Response {
-  if (error instanceof ZodError || error instanceof SyntaxError) {
+export function handleError(error: unknown) {
+  if (error instanceof AppError) {
+    return jsonResponse(
+      { success: false, message: error.publicMessage },
+      error.statusCode,
+    );
+  }
+
+  if (error instanceof ZodError) {
     return jsonResponse(
       {
-        error: "Validation failed",
-        issues: error instanceof ZodError ? error.issues : undefined,
+        success: false,
+        message: "Validation failed",
+        errors: error.issues.map((issue) => ({
+          path: issue.path.join("."),
+          message: issue.message,
+        })),
       },
       400,
     );
   }
 
-  if (error instanceof AppError) {
-    return jsonResponse({ error: error.publicMessage }, error.statusCode);
+  // req.json() throws a plain SyntaxError on malformed bodies — treat as a bad request.
+  if (error instanceof SyntaxError) {
+    return jsonResponse(
+      { success: false, message: "Malformed JSON body" },
+      400,
+    );
   }
 
-  return jsonResponse({ error: "Internal server error" }, 500);
+  const prismaError = handlePrismaError(error);
+  if (prismaError) {
+    return prismaError;
+  }
+
+  console.error(error);
+  return jsonResponse(
+    { success: false, message: "Internal server error" },
+    500,
+  );
 }

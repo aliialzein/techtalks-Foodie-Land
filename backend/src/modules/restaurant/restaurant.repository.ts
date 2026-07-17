@@ -1,5 +1,6 @@
 ﻿import {prisma} from "@/config";
-import type { CreateRestaurantInput, UpdateRestaurantInput } from "./restaurant.types";
+import { RestaurantStatus } from "@/generated/prisma";
+import type { RejectRestaurantInput, RestaurantCreateData, UpdateRestaurantInput } from "./restaurant.types";
 
 export class RestaurantRepository {
   static getAll(ownerId?: string) {
@@ -10,6 +11,7 @@ export class RestaurantRepository {
           select: {
             id: true,
             name: true,
+            email: true,
           },
         },
       },
@@ -23,6 +25,22 @@ export class RestaurantRepository {
     });
   }
 
+  static getPending() {
+    return prisma.restaurant.findMany({
+      where: { status: RestaurantStatus.PENDING },
+      include: {
+        owner: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+  }
+
   static ownerExists(ownerId: string) {
     return prisma.user.findUnique({
       where: { id: ownerId },
@@ -30,7 +48,7 @@ export class RestaurantRepository {
     });
   }
 
-  static create(data: CreateRestaurantInput) {
+  static create(data: RestaurantCreateData) {
     return prisma.restaurant.create({
       data,
     });
@@ -46,6 +64,29 @@ export class RestaurantRepository {
   static delete(id: string) {
     return prisma.restaurant.delete({
       where: { id },
+    });
+  }
+
+  static approve(id: string) {
+    return prisma.restaurant.update({
+      where: { id },
+      data: {
+        status: RestaurantStatus.APPROVED,
+        approvedAt: new Date(),
+        approvedBy: null,
+      },
+    });
+  }
+
+  static reject(id: string, data: RejectRestaurantInput) {
+    return prisma.restaurant.update({
+      where: { id },
+      data: {
+        status: RestaurantStatus.REJECTED,
+        approvedAt: null,
+        approvedBy: null,
+        rejectionReason: data.rejectionReason ?? null,
+      },
     });
   }
 }

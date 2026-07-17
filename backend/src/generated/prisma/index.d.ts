@@ -82,6 +82,15 @@ export namespace $Enums {
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
 
 
+export const RestaurantStatus: {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+};
+
+export type RestaurantStatus = (typeof RestaurantStatus)[keyof typeof RestaurantStatus]
+
+
 export const OrderStatus: {
   PENDING: 'PENDING',
   PREPARING: 'PREPARING',
@@ -106,6 +115,10 @@ export type ReservationStatus = (typeof ReservationStatus)[keyof typeof Reservat
 export type UserRole = $Enums.UserRole
 
 export const UserRole: typeof $Enums.UserRole
+
+export type RestaurantStatus = $Enums.RestaurantStatus
+
+export const RestaurantStatus: typeof $Enums.RestaurantStatus
 
 export type OrderStatus = $Enums.OrderStatus
 
@@ -3060,7 +3073,10 @@ export namespace Prisma {
     ownerId: string | null
     name: string | null
     description: string | null
-    isActive: boolean | null
+    status: $Enums.RestaurantStatus | null
+    approvedAt: Date | null
+    approvedBy: string | null
+    rejectionReason: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -3070,7 +3086,10 @@ export namespace Prisma {
     ownerId: string | null
     name: string | null
     description: string | null
-    isActive: boolean | null
+    status: $Enums.RestaurantStatus | null
+    approvedAt: Date | null
+    approvedBy: string | null
+    rejectionReason: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -3080,7 +3099,10 @@ export namespace Prisma {
     ownerId: number
     name: number
     description: number
-    isActive: number
+    status: number
+    approvedAt: number
+    approvedBy: number
+    rejectionReason: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -3092,7 +3114,10 @@ export namespace Prisma {
     ownerId?: true
     name?: true
     description?: true
-    isActive?: true
+    status?: true
+    approvedAt?: true
+    approvedBy?: true
+    rejectionReason?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -3102,7 +3127,10 @@ export namespace Prisma {
     ownerId?: true
     name?: true
     description?: true
-    isActive?: true
+    status?: true
+    approvedAt?: true
+    approvedBy?: true
+    rejectionReason?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -3112,7 +3140,10 @@ export namespace Prisma {
     ownerId?: true
     name?: true
     description?: true
-    isActive?: true
+    status?: true
+    approvedAt?: true
+    approvedBy?: true
+    rejectionReason?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -3195,7 +3226,10 @@ export namespace Prisma {
     ownerId: string
     name: string
     description: string | null
-    isActive: boolean
+    status: $Enums.RestaurantStatus
+    approvedAt: Date | null
+    approvedBy: string | null
+    rejectionReason: string | null
     createdAt: Date
     updatedAt: Date
     _count: RestaurantCountAggregateOutputType | null
@@ -3222,7 +3256,10 @@ export namespace Prisma {
     ownerId?: boolean
     name?: boolean
     description?: boolean
-    isActive?: boolean
+    status?: boolean
+    approvedAt?: boolean
+    approvedBy?: boolean
+    rejectionReason?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     foods?: boolean | Restaurant$foodsArgs<ExtArgs>
@@ -3239,7 +3276,10 @@ export namespace Prisma {
     ownerId?: boolean
     name?: boolean
     description?: boolean
-    isActive?: boolean
+    status?: boolean
+    approvedAt?: boolean
+    approvedBy?: boolean
+    rejectionReason?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     owner?: boolean | UserDefaultArgs<ExtArgs>
@@ -3250,7 +3290,10 @@ export namespace Prisma {
     ownerId?: boolean
     name?: boolean
     description?: boolean
-    isActive?: boolean
+    status?: boolean
+    approvedAt?: boolean
+    approvedBy?: boolean
+    rejectionReason?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
@@ -3283,7 +3326,10 @@ export namespace Prisma {
       ownerId: string
       name: string
       description: string | null
-      isActive: boolean
+      status: $Enums.RestaurantStatus
+      approvedAt: Date | null
+      approvedBy: string | null
+      rejectionReason: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["restaurant"]>
@@ -3689,7 +3735,10 @@ export namespace Prisma {
     readonly ownerId: FieldRef<"Restaurant", 'String'>
     readonly name: FieldRef<"Restaurant", 'String'>
     readonly description: FieldRef<"Restaurant", 'String'>
-    readonly isActive: FieldRef<"Restaurant", 'Boolean'>
+    readonly status: FieldRef<"Restaurant", 'RestaurantStatus'>
+    readonly approvedAt: FieldRef<"Restaurant", 'DateTime'>
+    readonly approvedBy: FieldRef<"Restaurant", 'String'>
+    readonly rejectionReason: FieldRef<"Restaurant", 'String'>
     readonly createdAt: FieldRef<"Restaurant", 'DateTime'>
     readonly updatedAt: FieldRef<"Restaurant", 'DateTime'>
   }
@@ -12971,7 +13020,10 @@ export namespace Prisma {
     ownerId: 'ownerId',
     name: 'name',
     description: 'description',
-    isActive: 'isActive',
+    status: 'status',
+    approvedAt: 'approvedAt',
+    approvedBy: 'approvedBy',
+    rejectionReason: 'rejectionReason',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -13152,9 +13204,16 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Boolean'
+   * Reference to a field of type 'RestaurantStatus'
    */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+  export type EnumRestaurantStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RestaurantStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'RestaurantStatus[]'
+   */
+  export type ListEnumRestaurantStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RestaurantStatus[]'>
     
 
 
@@ -13183,6 +13242,13 @@ export namespace Prisma {
    * Reference to a field of type 'Float[]'
    */
   export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -13299,7 +13365,10 @@ export namespace Prisma {
     ownerId?: StringFilter<"Restaurant"> | string
     name?: StringFilter<"Restaurant"> | string
     description?: StringNullableFilter<"Restaurant"> | string | null
-    isActive?: BoolFilter<"Restaurant"> | boolean
+    status?: EnumRestaurantStatusFilter<"Restaurant"> | $Enums.RestaurantStatus
+    approvedAt?: DateTimeNullableFilter<"Restaurant"> | Date | string | null
+    approvedBy?: StringNullableFilter<"Restaurant"> | string | null
+    rejectionReason?: StringNullableFilter<"Restaurant"> | string | null
     createdAt?: DateTimeFilter<"Restaurant"> | Date | string
     updatedAt?: DateTimeFilter<"Restaurant"> | Date | string
     foods?: FoodListRelationFilter
@@ -13315,7 +13384,10 @@ export namespace Prisma {
     ownerId?: SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
-    isActive?: SortOrder
+    status?: SortOrder
+    approvedAt?: SortOrderInput | SortOrder
+    approvedBy?: SortOrderInput | SortOrder
+    rejectionReason?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     foods?: FoodOrderByRelationAggregateInput
@@ -13334,7 +13406,10 @@ export namespace Prisma {
     ownerId?: StringFilter<"Restaurant"> | string
     name?: StringFilter<"Restaurant"> | string
     description?: StringNullableFilter<"Restaurant"> | string | null
-    isActive?: BoolFilter<"Restaurant"> | boolean
+    status?: EnumRestaurantStatusFilter<"Restaurant"> | $Enums.RestaurantStatus
+    approvedAt?: DateTimeNullableFilter<"Restaurant"> | Date | string | null
+    approvedBy?: StringNullableFilter<"Restaurant"> | string | null
+    rejectionReason?: StringNullableFilter<"Restaurant"> | string | null
     createdAt?: DateTimeFilter<"Restaurant"> | Date | string
     updatedAt?: DateTimeFilter<"Restaurant"> | Date | string
     foods?: FoodListRelationFilter
@@ -13350,7 +13425,10 @@ export namespace Prisma {
     ownerId?: SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
-    isActive?: SortOrder
+    status?: SortOrder
+    approvedAt?: SortOrderInput | SortOrder
+    approvedBy?: SortOrderInput | SortOrder
+    rejectionReason?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: RestaurantCountOrderByAggregateInput
@@ -13366,7 +13444,10 @@ export namespace Prisma {
     ownerId?: StringWithAggregatesFilter<"Restaurant"> | string
     name?: StringWithAggregatesFilter<"Restaurant"> | string
     description?: StringNullableWithAggregatesFilter<"Restaurant"> | string | null
-    isActive?: BoolWithAggregatesFilter<"Restaurant"> | boolean
+    status?: EnumRestaurantStatusWithAggregatesFilter<"Restaurant"> | $Enums.RestaurantStatus
+    approvedAt?: DateTimeNullableWithAggregatesFilter<"Restaurant"> | Date | string | null
+    approvedBy?: StringNullableWithAggregatesFilter<"Restaurant"> | string | null
+    rejectionReason?: StringNullableWithAggregatesFilter<"Restaurant"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Restaurant"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Restaurant"> | Date | string
   }
@@ -14012,7 +14093,10 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    isActive?: boolean
+    status?: $Enums.RestaurantStatus
+    approvedAt?: Date | string | null
+    approvedBy?: string | null
+    rejectionReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     foods?: FoodCreateNestedManyWithoutRestaurantInput
@@ -14028,7 +14112,10 @@ export namespace Prisma {
     ownerId: string
     name: string
     description?: string | null
-    isActive?: boolean
+    status?: $Enums.RestaurantStatus
+    approvedAt?: Date | string | null
+    approvedBy?: string | null
+    rejectionReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     foods?: FoodUncheckedCreateNestedManyWithoutRestaurantInput
@@ -14042,7 +14129,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumRestaurantStatusFieldUpdateOperationsInput | $Enums.RestaurantStatus
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     foods?: FoodUpdateManyWithoutRestaurantNestedInput
@@ -14058,7 +14148,10 @@ export namespace Prisma {
     ownerId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumRestaurantStatusFieldUpdateOperationsInput | $Enums.RestaurantStatus
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     foods?: FoodUncheckedUpdateManyWithoutRestaurantNestedInput
@@ -14073,7 +14166,10 @@ export namespace Prisma {
     ownerId: string
     name: string
     description?: string | null
-    isActive?: boolean
+    status?: $Enums.RestaurantStatus
+    approvedAt?: Date | string | null
+    approvedBy?: string | null
+    rejectionReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -14082,7 +14178,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumRestaurantStatusFieldUpdateOperationsInput | $Enums.RestaurantStatus
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -14092,7 +14191,10 @@ export namespace Prisma {
     ownerId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumRestaurantStatusFieldUpdateOperationsInput | $Enums.RestaurantStatus
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -14781,9 +14883,22 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
+  export type EnumRestaurantStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.RestaurantStatus | EnumRestaurantStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.RestaurantStatus[] | ListEnumRestaurantStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RestaurantStatus[] | ListEnumRestaurantStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumRestaurantStatusFilter<$PrismaModel> | $Enums.RestaurantStatus
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type FoodListRelationFilter = {
@@ -14831,7 +14946,10 @@ export namespace Prisma {
     ownerId?: SortOrder
     name?: SortOrder
     description?: SortOrder
-    isActive?: SortOrder
+    status?: SortOrder
+    approvedAt?: SortOrder
+    approvedBy?: SortOrder
+    rejectionReason?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -14841,7 +14959,10 @@ export namespace Prisma {
     ownerId?: SortOrder
     name?: SortOrder
     description?: SortOrder
-    isActive?: SortOrder
+    status?: SortOrder
+    approvedAt?: SortOrder
+    approvedBy?: SortOrder
+    rejectionReason?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -14851,7 +14972,10 @@ export namespace Prisma {
     ownerId?: SortOrder
     name?: SortOrder
     description?: SortOrder
-    isActive?: SortOrder
+    status?: SortOrder
+    approvedAt?: SortOrder
+    approvedBy?: SortOrder
+    rejectionReason?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -14874,12 +14998,28 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+  export type EnumRestaurantStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RestaurantStatus | EnumRestaurantStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.RestaurantStatus[] | ListEnumRestaurantStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RestaurantStatus[] | ListEnumRestaurantStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumRestaurantStatusWithAggregatesFilter<$PrismaModel> | $Enums.RestaurantStatus
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
+    _min?: NestedEnumRestaurantStatusFilter<$PrismaModel>
+    _max?: NestedEnumRestaurantStatusFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -14955,6 +15095,11 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type CartItemListRelationFilter = {
@@ -15045,6 +15190,14 @@ export namespace Prisma {
     _sum?: NestedFloatFilter<$PrismaModel>
     _min?: NestedFloatFilter<$PrismaModel>
     _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type FoodCategoryCountOrderByAggregateInput = {
@@ -15554,8 +15707,12 @@ export namespace Prisma {
     set?: string | null
   }
 
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
+  export type EnumRestaurantStatusFieldUpdateOperationsInput = {
+    set?: $Enums.RestaurantStatus
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
   }
 
   export type FoodUpdateManyWithoutRestaurantNestedInput = {
@@ -15782,6 +15939,10 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
   }
 
   export type CartItemUpdateManyWithoutFoodNestedInput = {
@@ -16276,9 +16437,22 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
+  export type NestedEnumRestaurantStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.RestaurantStatus | EnumRestaurantStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.RestaurantStatus[] | ListEnumRestaurantStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RestaurantStatus[] | ListEnumRestaurantStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumRestaurantStatusFilter<$PrismaModel> | $Enums.RestaurantStatus
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -16309,12 +16483,28 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+  export type NestedEnumRestaurantStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RestaurantStatus | EnumRestaurantStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.RestaurantStatus[] | ListEnumRestaurantStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RestaurantStatus[] | ListEnumRestaurantStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumRestaurantStatusWithAggregatesFilter<$PrismaModel> | $Enums.RestaurantStatus
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
+    _min?: NestedEnumRestaurantStatusFilter<$PrismaModel>
+    _max?: NestedEnumRestaurantStatusFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -16344,6 +16534,11 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
     in?: number[] | ListFloatFieldRefInput<$PrismaModel>
@@ -16358,6 +16553,14 @@ export namespace Prisma {
     _sum?: NestedFloatFilter<$PrismaModel>
     _min?: NestedFloatFilter<$PrismaModel>
     _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedEnumOrderStatusFilter<$PrismaModel = never> = {
@@ -16469,7 +16672,10 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    isActive?: boolean
+    status?: $Enums.RestaurantStatus
+    approvedAt?: Date | string | null
+    approvedBy?: string | null
+    rejectionReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     foods?: FoodCreateNestedManyWithoutRestaurantInput
@@ -16483,7 +16689,10 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    isActive?: boolean
+    status?: $Enums.RestaurantStatus
+    approvedAt?: Date | string | null
+    approvedBy?: string | null
+    rejectionReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     foods?: FoodUncheckedCreateNestedManyWithoutRestaurantInput
@@ -16605,7 +16814,10 @@ export namespace Prisma {
     ownerId?: StringFilter<"Restaurant"> | string
     name?: StringFilter<"Restaurant"> | string
     description?: StringNullableFilter<"Restaurant"> | string | null
-    isActive?: BoolFilter<"Restaurant"> | boolean
+    status?: EnumRestaurantStatusFilter<"Restaurant"> | $Enums.RestaurantStatus
+    approvedAt?: DateTimeNullableFilter<"Restaurant"> | Date | string | null
+    approvedBy?: StringNullableFilter<"Restaurant"> | string | null
+    rejectionReason?: StringNullableFilter<"Restaurant"> | string | null
     createdAt?: DateTimeFilter<"Restaurant"> | Date | string
     updatedAt?: DateTimeFilter<"Restaurant"> | Date | string
   }
@@ -16940,7 +17152,10 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    isActive?: boolean
+    status?: $Enums.RestaurantStatus
+    approvedAt?: Date | string | null
+    approvedBy?: string | null
+    rejectionReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     foods?: FoodCreateNestedManyWithoutRestaurantInput
@@ -16955,7 +17170,10 @@ export namespace Prisma {
     ownerId: string
     name: string
     description?: string | null
-    isActive?: boolean
+    status?: $Enums.RestaurantStatus
+    approvedAt?: Date | string | null
+    approvedBy?: string | null
+    rejectionReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     foods?: FoodUncheckedCreateNestedManyWithoutRestaurantInput
@@ -16984,7 +17202,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumRestaurantStatusFieldUpdateOperationsInput | $Enums.RestaurantStatus
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     foods?: FoodUpdateManyWithoutRestaurantNestedInput
@@ -16999,7 +17220,10 @@ export namespace Prisma {
     ownerId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumRestaurantStatusFieldUpdateOperationsInput | $Enums.RestaurantStatus
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     foods?: FoodUncheckedUpdateManyWithoutRestaurantNestedInput
@@ -17038,7 +17262,10 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    isActive?: boolean
+    status?: $Enums.RestaurantStatus
+    approvedAt?: Date | string | null
+    approvedBy?: string | null
+    rejectionReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     categories?: FoodCategoryCreateNestedManyWithoutRestaurantInput
@@ -17053,7 +17280,10 @@ export namespace Prisma {
     ownerId: string
     name: string
     description?: string | null
-    isActive?: boolean
+    status?: $Enums.RestaurantStatus
+    approvedAt?: Date | string | null
+    approvedBy?: string | null
+    rejectionReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     categories?: FoodCategoryUncheckedCreateNestedManyWithoutRestaurantInput
@@ -17154,7 +17384,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumRestaurantStatusFieldUpdateOperationsInput | $Enums.RestaurantStatus
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     categories?: FoodCategoryUpdateManyWithoutRestaurantNestedInput
@@ -17169,7 +17402,10 @@ export namespace Prisma {
     ownerId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumRestaurantStatusFieldUpdateOperationsInput | $Enums.RestaurantStatus
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     categories?: FoodCategoryUncheckedUpdateManyWithoutRestaurantNestedInput
@@ -17234,7 +17470,10 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    isActive?: boolean
+    status?: $Enums.RestaurantStatus
+    approvedAt?: Date | string | null
+    approvedBy?: string | null
+    rejectionReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     foods?: FoodCreateNestedManyWithoutRestaurantInput
@@ -17249,7 +17488,10 @@ export namespace Prisma {
     ownerId: string
     name: string
     description?: string | null
-    isActive?: boolean
+    status?: $Enums.RestaurantStatus
+    approvedAt?: Date | string | null
+    approvedBy?: string | null
+    rejectionReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     foods?: FoodUncheckedCreateNestedManyWithoutRestaurantInput
@@ -17296,7 +17538,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumRestaurantStatusFieldUpdateOperationsInput | $Enums.RestaurantStatus
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     foods?: FoodUpdateManyWithoutRestaurantNestedInput
@@ -17311,7 +17556,10 @@ export namespace Prisma {
     ownerId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumRestaurantStatusFieldUpdateOperationsInput | $Enums.RestaurantStatus
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     foods?: FoodUncheckedUpdateManyWithoutRestaurantNestedInput
@@ -17674,7 +17922,10 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    isActive?: boolean
+    status?: $Enums.RestaurantStatus
+    approvedAt?: Date | string | null
+    approvedBy?: string | null
+    rejectionReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     foods?: FoodCreateNestedManyWithoutRestaurantInput
@@ -17689,7 +17940,10 @@ export namespace Prisma {
     ownerId: string
     name: string
     description?: string | null
-    isActive?: boolean
+    status?: $Enums.RestaurantStatus
+    approvedAt?: Date | string | null
+    approvedBy?: string | null
+    rejectionReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     foods?: FoodUncheckedCreateNestedManyWithoutRestaurantInput
@@ -17775,7 +18029,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumRestaurantStatusFieldUpdateOperationsInput | $Enums.RestaurantStatus
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     foods?: FoodUpdateManyWithoutRestaurantNestedInput
@@ -17790,7 +18047,10 @@ export namespace Prisma {
     ownerId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumRestaurantStatusFieldUpdateOperationsInput | $Enums.RestaurantStatus
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     foods?: FoodUncheckedUpdateManyWithoutRestaurantNestedInput
@@ -17980,7 +18240,10 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    isActive?: boolean
+    status?: $Enums.RestaurantStatus
+    approvedAt?: Date | string | null
+    approvedBy?: string | null
+    rejectionReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     foods?: FoodCreateNestedManyWithoutRestaurantInput
@@ -17995,7 +18258,10 @@ export namespace Prisma {
     ownerId: string
     name: string
     description?: string | null
-    isActive?: boolean
+    status?: $Enums.RestaurantStatus
+    approvedAt?: Date | string | null
+    approvedBy?: string | null
+    rejectionReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     foods?: FoodUncheckedCreateNestedManyWithoutRestaurantInput
@@ -18055,7 +18321,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumRestaurantStatusFieldUpdateOperationsInput | $Enums.RestaurantStatus
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     foods?: FoodUpdateManyWithoutRestaurantNestedInput
@@ -18070,7 +18339,10 @@ export namespace Prisma {
     ownerId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumRestaurantStatusFieldUpdateOperationsInput | $Enums.RestaurantStatus
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     foods?: FoodUncheckedUpdateManyWithoutRestaurantNestedInput
@@ -18137,7 +18409,10 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    isActive?: boolean
+    status?: $Enums.RestaurantStatus
+    approvedAt?: Date | string | null
+    approvedBy?: string | null
+    rejectionReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -18199,7 +18474,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumRestaurantStatusFieldUpdateOperationsInput | $Enums.RestaurantStatus
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     foods?: FoodUpdateManyWithoutRestaurantNestedInput
@@ -18213,7 +18491,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumRestaurantStatusFieldUpdateOperationsInput | $Enums.RestaurantStatus
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     foods?: FoodUncheckedUpdateManyWithoutRestaurantNestedInput
@@ -18227,7 +18508,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumRestaurantStatusFieldUpdateOperationsInput | $Enums.RestaurantStatus
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

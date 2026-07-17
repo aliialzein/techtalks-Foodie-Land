@@ -29,6 +29,13 @@ const foodId = "aaaaaaaa-1111-4111-8111-aaaaaaaaaaaa";
 const foodWithOwner = {
   id: foodId,
   restaurantId,
+  name: "Classic Burger",
+  description: null,
+  price: 10.5,
+  imageUrl: null,
+  isAvailable: true,
+  createdAt: new Date("2026-01-01T00:00:00.000Z"),
+  updatedAt: new Date("2026-01-01T00:00:00.000Z"),
   restaurant: { id: restaurantId, ownerId },
 };
 const food = {
@@ -105,7 +112,10 @@ describe("food controller", () => {
     const response = await getFood(foodId);
 
     expect(response.status).toBe(404);
-    expect(await readJson(response)).toEqual({ error: "Food not found" });
+    expect(await readJson(response)).toEqual({
+      success: false,
+      message: "Food not found",
+    });
   });
 
   describe("createFood", () => {

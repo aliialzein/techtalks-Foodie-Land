@@ -7,6 +7,7 @@ import { Eye, EyeOff, ChefHat } from 'lucide-react'
 import PageLoader from '@/components/ui/PageLoader'
 import { useTheme } from '@/hooks/useTheme'
 import { saveSession } from '@/lib/auth'
+import { redirectAfterLogin } from '@/lib/redirects'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -18,6 +19,7 @@ export default function LoginPage() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [remember, setRemember] = useState(false)
+  const [role, setRole] = useState<'CUSTOMER' | 'OWNER'>('CUSTOMER')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const theme = useTheme()
@@ -42,6 +44,7 @@ export default function LoginPage() {
           name: `${firstName} ${lastName}`.trim(),
           email,
           password,
+          role,
         }),
       })
       const data = await res.json()
@@ -54,7 +57,7 @@ export default function LoginPage() {
         return
       }
       saveSession(data)
-      router.push('/menu')
+      redirectAfterLogin(router, data.user)
     } catch {
       setError('Something went wrong. Please try again.')
     } finally {
@@ -221,6 +224,26 @@ export default function LoginPage() {
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-orange-500 hover:text-orange-400"
               >
                 {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label className={labelClass}>Account type</label>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => setRole('CUSTOMER')}
+                className={`rounded-xl border px-3 py-2 text-sm font-medium ${role === 'CUSTOMER' ? 'border-orange-500 bg-orange-500/10 text-orange-600' : (dark ? 'border-white/10 text-white/70' : 'border-black/10 text-black/70')}`}
+              >
+                Customer
+              </button>
+              <button
+                type="button"
+                onClick={() => setRole('OWNER')}
+                className={`rounded-xl border px-3 py-2 text-sm font-medium ${role === 'OWNER' ? 'border-orange-500 bg-orange-500/10 text-orange-600' : (dark ? 'border-white/10 text-white/70' : 'border-black/10 text-black/70')}`}
+              >
+                Restaurant Owner
               </button>
             </div>
           </div>
