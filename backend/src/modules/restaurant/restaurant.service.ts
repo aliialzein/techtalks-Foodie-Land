@@ -8,6 +8,8 @@ import type {
   RestaurantWithOwner,
   UpdateRestaurantInput,
 } from "./restaurant.types";
+import { RestaurantEmailService } from "@/modules/notifications/restaurant/restaurant-email.service";
+import logger from "@/util/logger";
 
 export class RestaurantService {
   static getAll(ownerId?: string): Promise<RestaurantWithOwner[]> {
@@ -25,19 +27,47 @@ export class RestaurantService {
   }
 
   static async create(payload: CreateRestaurantInput): Promise<Restaurant> {
-    const owner = await RestaurantRepository.ownerExists(payload.ownerId);
+    const owner = await RestaurantRepository.getOwner(payload.ownerId);
 
     if (!owner) {
       throw new NotFoundError("Owner", payload.ownerId);
     }
 
-    return RestaurantRepository.create({
+    const restaurant = await RestaurantRepository.create({
       ownerId: payload.ownerId,
       name: payload.name,
       description: payload.description,
       status: RestaurantStatus.PENDING,
       rejectionReason: null,
     });
+    const admins = await RestaurantRepository.getAdmins();
+
+    const results = await Promise.allSettled([
+      RestaurantEmailService.sendRegistrationReceived(
+        owner.email,
+        owner.name,
+        restaurant.name,
+      ),
+      ...admins.map((admin) =>
+        RestaurantEmailService.sendNewRegistrationToAdmin(
+          admin.email,
+          admin.name,
+          restaurant.name,
+          owner.name,
+          owner.email,
+        ),
+      ),
+    ]);
+
+    results.forEach((result, index) => {
+      if (result.status === "rejected") {
+        logger.error(`Email task ${index} failed`, {
+          error: result.reason,
+        });
+      }
+    });
+
+    return restaurant;
   }
 
   static getPending(): Promise<RestaurantWithOwner[]> {
@@ -58,12 +88,24 @@ export class RestaurantService {
   }
 
   static async approve(id: string): Promise<Restaurant> {
-    await this.getById(id);
-    return RestaurantRepository.approve(id);
+    const restaurant = await RestaurantRepository.approve(id);
+    await RestaurantEmailService.sendApproved(
+      restaurant.owner.email,
+      restaurant.owner.name,
+      restaurant.name,
+    );
+    return restaurant;
   }
 
   static async reject(id: string, payload: RejectRestaurantInput): Promise<Restaurant> {
-    await this.getById(id);
-    return RestaurantRepository.reject(id, payload);
+    const restaurant = await RestaurantRepository.reject(id, payload);
+    await RestaurantEmailService.sendRejected(
+      restaurant.owner.email,
+      restaurant.owner.name,
+      restaurant.name,
+      restaurant.rejectionReason,
+    );
+    return restaurant;
   }
+
 }
