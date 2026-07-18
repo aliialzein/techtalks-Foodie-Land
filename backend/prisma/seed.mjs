@@ -5,6 +5,7 @@
 // Creates:
 //   - an OWNER account that owns "Demo Diner" (for the owner panel)
 //   - a CUSTOMER account with one order at Demo Diner
+//   - an ADMIN account (for the restaurant approval panel)
 //
 // The generated Prisma client is CommonJS, so we load it (and bcryptjs) via
 // createRequire. Prisma's CLI loads .env before running this, so DATABASE_URL
@@ -22,6 +23,8 @@ const OWNER_EMAIL = "owner@foodieland.test";
 const OWNER_PASSWORD = "owner1234";
 const CUSTOMER_EMAIL = "demo@foodieland.test";
 const CUSTOMER_PASSWORD = "demo1234";
+const ADMIN_EMAIL = "admin@foodieland.test";
+const ADMIN_PASSWORD = "admin1234";
 
 async function upsertUser(email, name, role, plainPassword) {
   const password = await bcrypt.hash(plainPassword, 10);
@@ -46,6 +49,7 @@ async function main() {
     "CUSTOMER",
     CUSTOMER_PASSWORD,
   );
+  await upsertUser(ADMIN_EMAIL, "Demo Admin", "ADMIN", ADMIN_PASSWORD);
 
   // Demo Diner is owned by the owner account (reassign if it already exists).
   let restaurant = await prisma.restaurant.findFirst({
@@ -95,6 +99,7 @@ async function main() {
   console.log("✅ Seed complete.");
   console.log(`   Owner login    → ${OWNER_EMAIL} / ${OWNER_PASSWORD}`);
   console.log(`   Customer login → ${CUSTOMER_EMAIL} / ${CUSTOMER_PASSWORD}`);
+  console.log(`   Admin login    → ${ADMIN_EMAIL} / ${ADMIN_PASSWORD}`);
   console.log(`   Restaurant: ${restaurant.name} (${restaurant.id}) owned by ${owner.id}`);
 }
 
