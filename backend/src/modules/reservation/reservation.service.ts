@@ -1,11 +1,8 @@
 import type { Reservation } from "@/generated/prisma";
 import { NotFoundError } from "../../util/errors";
 import { ReservationRepository } from "./reservation.repository";
-import type {
-  CreateReservationInput,
-  ReservationWithRelations,
-  UpdateReservationInput,
-} from "./reservation.types";
+import type { CreateReservationInput, ReservationWithRelations, ReservationWithEmailRelations, UpdateReservationInput} from "./reservation.types";
+import { ReservationEmailService } from "@/modules/notifications/reservation/reservation-email.service";
 
 export class ReservationService {
   static getAll(): Promise<ReservationWithRelations[]> {
@@ -22,24 +19,30 @@ export class ReservationService {
     return reservation;
   }
 
-  static async create(
-    payload: CreateReservationInput,
-  ): Promise<Reservation> {
-    const user = await ReservationRepository.userExists(payload.userId);
-
+  static async create(payload: CreateReservationInput): Promise<ReservationWithEmailRelations> {
+    
+    const user = await ReservationRepository.getUser(payload.userId);
     if (!user) {
-      throw new NotFoundError("User", payload.userId);
+      throw new NotFoundError(
+        "User",
+        payload.userId,
+      );
     }
 
-    const restaurant = await ReservationRepository.restaurantExists(
-      payload.restaurantId,
-    );
-
+    const restaurant = await ReservationRepository.getRestaurant(payload.restaurantId);
     if (!restaurant) {
       throw new NotFoundError("Restaurant", payload.restaurantId);
     }
 
-    return ReservationRepository.create(payload);
+    const reservation = await ReservationRepository.create(payload);
+    await ReservationEmailService.sendSubmitted(
+      user.email,
+      user.name,
+      restaurant.name,
+      reservation.dateTime,
+      reservation.peopleCount,
+    );
+    return reservation;
   }
 
   static async update(
@@ -49,6 +52,37 @@ export class ReservationService {
     await this.getById(id);
 
     return ReservationRepository.update(id, payload);
+  }
+
+  static async cancel(
+    id:string,
+  ): Promise<ReservationWithEmailRelations>{
+
+    const reservation =
+      await ReservationRepository.cancel(id);
+
+
+    await ReservationEmailService.sendCancelled(
+      reservation.user.email,
+      reservation.user.name,
+      reservation.restaurant.name,
+    );
+
+
+    return reservation;
+  }
+
+  static async confirm(id:string ):Promise<ReservationWithEmailRelations>{
+    const reservation = await ReservationRepository.confirm(id);
+
+    await ReservationEmailService.sendConfirmed(
+        reservation.user.email,
+        reservation.user.name,
+        reservation.restaurant.name,
+        reservation.dateTime,
+        reservation.peopleCount,
+    );
+    return reservation;
   }
 
   static async delete(id: string): Promise<Reservation> {

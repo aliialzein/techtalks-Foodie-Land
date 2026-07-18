@@ -27,3 +27,20 @@ export type CreateReservationInput = {
 export type UpdateReservationInput = Partial<
   Pick<Reservation, "status" | "dateTime" | "peopleCount">
 >;
+
+export type ReservationWithEmailRelations =
+  Prisma.ReservationGetPayload<{
+    include: {
+      user: {
+        select: {
+          name: true;
+          email: true;
+        };
+      };
+      restaurant: {
+        select: {
+          name: true;
+        };
+      };
+    };
+  }>;

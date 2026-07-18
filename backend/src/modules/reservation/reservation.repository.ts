@@ -30,23 +30,45 @@ export class ReservationRepository {
     });
   }
 
-  static userExists(id: string) {
+  static getUser(id: string) {
     return prisma.user.findUnique({
       where: { id },
-      select: { id: true },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
     });
   }
 
-  static restaurantExists(id: string) {
+  static getRestaurant(id: string) {
     return prisma.restaurant.findUnique({
-      where: { id },
-      select: { id: true },
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        name: true,
+      }
     });
   }
 
   static create(data: CreateReservationInput) {
     return prisma.reservation.create({
       data,
+      include: {
+        user: {
+          select:{
+            name:true,
+            email:true,
+          },
+        },
+        restaurant:{
+          select:{
+            name:true,
+          },
+        },
+      },
     });
   }
 
@@ -55,6 +77,54 @@ export class ReservationRepository {
       where: { id },
       data,
     });
+  }
+  static cancel(id: string) {
+    return prisma.reservation.update({
+      where:{
+        id,
+      },
+      data:{
+        status:"CANCELLED",
+      },
+      include:{
+        user:{
+          select:{
+            name:true,
+            email:true,
+          },
+        },
+        restaurant:{
+          select:{
+            name:true,
+          },
+        },
+      },
+    });
+  }
+
+  static confirm(id:string){
+    return prisma.reservation.update({
+      where:{
+        id,
+      },
+      data:{
+        status:"CONFIRMED",
+      },
+      include:{
+        user:{
+          select:{
+            name:true,
+            email:true,
+          }
+        },
+        restaurant:{
+          select:{
+            name:true,
+          }
+        }
+      }
+    })
+
   }
 
   static delete(id: string) {
