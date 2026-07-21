@@ -4,6 +4,7 @@ import { EmailService } from "@/lib/email";
 import { reservationSubmittedTemplate } from "./templates/reservation-submitted";
 import { reservationConfirmedTemplate } from "./templates/reservation-confirmed";
 import { reservationCancelledTemplate } from "./templates/reservation-cancelled";
+import { reservationNewRequestTemplate } from "./templates/reservation-new-request";
 
 export class ReservationEmailService {
 
@@ -80,7 +81,6 @@ export class ReservationEmailService {
         text: template.text,
       });
 
-
       logger.info(
         "Reservation notification email sent",
         {
@@ -103,5 +103,27 @@ export class ReservationEmailService {
 
       // Do not break reservation flow
     }
+  }
+
+  static async sendNewRequest(
+    email: string,
+    restaurantName: string,
+    customerName: string,
+    customerEmail: string,
+    dateTime: Date,
+    peopleCount: number,
+    notes?: string | null,
+  ) {
+    return this.send(
+      email,
+      reservationNewRequestTemplate(
+        restaurantName,
+        customerName,
+        customerEmail,
+        dateTime,
+        peopleCount,
+        notes,
+      ),
+    );
   }
 }

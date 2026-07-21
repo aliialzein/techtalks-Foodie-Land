@@ -10,8 +10,13 @@ export type ReservationWithRelations = Prisma.ReservationGetPayload<{
     };
     restaurant: {
       select: {
-        id: true;
         name: true;
+        owner: {
+          select: {
+            name: true;
+            email: true;
+          };
+        };
       };
     };
   };

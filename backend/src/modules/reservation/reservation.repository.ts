@@ -16,8 +16,13 @@ export class ReservationRepository {
         },
         restaurant: {
           select: {
-            id: true,
             name: true,
+            owner: {
+              select: {
+                name: true,
+                email: true,
+              },
+            },
           },
         },
       },
@@ -63,9 +68,15 @@ export class ReservationRepository {
             email:true,
           },
         },
-        restaurant:{
-          select:{
-            name:true,
+        restaurant: {
+          select: {
+            name: true,
+            owner: {
+              select: {
+                name: true,
+                email: true,
+              },
+            },
           },
         },
       },

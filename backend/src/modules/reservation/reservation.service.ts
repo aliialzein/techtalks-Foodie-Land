@@ -35,13 +35,24 @@ export class ReservationService {
     }
 
     const reservation = await ReservationRepository.create(payload);
+
     await ReservationEmailService.sendSubmitted(
-      user.email,
-      user.name,
-      restaurant.name,
-      reservation.dateTime,
-      reservation.peopleCount,
+        reservation.user.email,
+        reservation.user.name,
+        reservation.restaurant.name,
+        reservation.dateTime,
+        reservation.peopleCount,
     );
+
+    await ReservationEmailService.sendNewRequest(
+        reservation.restaurant.owner.email,
+        reservation.restaurant.name,
+        reservation.user.name,
+        reservation.user.email,
+        reservation.dateTime,
+        reservation.peopleCount,
+    );
+
     return reservation;
   }
 

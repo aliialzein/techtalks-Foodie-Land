@@ -9,6 +9,7 @@ export const EMAIL_SUBJECTS = {
     submitted: "Reservation Received",
     confirmed: "Reservation Confirmed",
     cancelled: "Reservation Cancelled",
+    newRequest: "New Reservation Request",
   },
 
   order: {
