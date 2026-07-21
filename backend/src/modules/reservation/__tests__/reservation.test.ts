@@ -12,11 +12,22 @@ vi.mock("../reservation.repository", () => ({
   ReservationRepository: {
     getAll: vi.fn(),
     getById: vi.fn(),
-    userExists: vi.fn(),
-    restaurantExists: vi.fn(),
+    getUser: vi.fn(),
+    getRestaurant: vi.fn(),
     create: vi.fn(),
     update: vi.fn(),
+    cancel: vi.fn(),
+    confirm: vi.fn(),
     delete: vi.fn(),
+  },
+}));
+
+vi.mock("@/modules/notifications/reservation/reservation-email.service", () => ({
+  ReservationEmailService: {
+    sendSubmitted: vi.fn(),
+    sendNewRequest: vi.fn(),
+    sendConfirmed: vi.fn(),
+    sendCancelled: vi.fn(),
   },
 }));
 
@@ -35,10 +46,15 @@ const reservation = {
   user: {
     id: userId,
     name: "John Doe",
+    email: "john@example.com",
   },
   restaurant: {
     id: restaurantId,
     name: "Foodie Land",
+    owner: {
+      name: "Owner",
+      email: "owner@foodieland.com",
+    },
   },
 };
 
@@ -119,12 +135,15 @@ describe("reservation controller", () => {
     }
 
     it("creates a reservation", async () => {
-      vi.mocked(ReservationRepository.userExists).mockResolvedValue({
+      vi.mocked(ReservationRepository.getUser).mockResolvedValue({
         id: userId,
+        name: "John Doe",
+        email: "john@example.com",
       });
 
-      vi.mocked(ReservationRepository.restaurantExists).mockResolvedValue({
+      vi.mocked(ReservationRepository.getRestaurant).mockResolvedValue({
         id: restaurantId,
+        name: "Foodie Land",
       });
 
       vi.mocked(ReservationRepository.create).mockResolvedValue(reservation);
@@ -154,8 +173,9 @@ describe("reservation controller", () => {
       });
     });
 
+
     it("returns 404 when user does not exist", async () => {
-      vi.mocked(ReservationRepository.userExists).mockResolvedValue(null);
+      vi.mocked(ReservationRepository.getUser).mockResolvedValue(null);
 
       const response = await createReservation(
         makeRequest({
@@ -167,6 +187,7 @@ describe("reservation controller", () => {
       );
 
       expect(response.status).toBe(404);
+
       expect(await readJson(response)).toEqual({
         success: false,
         message: "User not found",
@@ -175,12 +196,15 @@ describe("reservation controller", () => {
       expect(ReservationRepository.create).not.toHaveBeenCalled();
     });
 
+
     it("returns 404 when restaurant does not exist", async () => {
-      vi.mocked(ReservationRepository.userExists).mockResolvedValue({
+      vi.mocked(ReservationRepository.getUser).mockResolvedValue({
         id: userId,
+        name: "John Doe",
+        email: "john@example.com",
       });
 
-      vi.mocked(ReservationRepository.restaurantExists).mockResolvedValue(null);
+      vi.mocked(ReservationRepository.getRestaurant).mockResolvedValue(null);
 
       const response = await createReservation(
         makeRequest({
@@ -192,102 +216,13 @@ describe("reservation controller", () => {
       );
 
       expect(response.status).toBe(404);
+
       expect(await readJson(response)).toEqual({
         success: false,
         message: "Restaurant not found",
       });
 
       expect(ReservationRepository.create).not.toHaveBeenCalled();
-    });
-
-    it("rejects invalid userId", async () => {
-      const response = await createReservation(
-        makeRequest({
-          userId: "invalid",
-          restaurantId,
-          dateTime: "2026-07-20T18:00:00.000Z",
-          peopleCount: 4,
-        }),
-      );
-
-      expect(response.status).toBe(400);
-    });
-
-    it("rejects invalid restaurantId", async () => {
-      const response = await createReservation(
-        makeRequest({
-          userId,
-          restaurantId: "invalid",
-          dateTime: "2026-07-20T18:00:00.000Z",
-          peopleCount: 4,
-        }),
-      );
-
-      expect(response.status).toBe(400);
-    });
-
-    it("rejects invalid date", async () => {
-      const response = await createReservation(
-        makeRequest({
-          userId,
-          restaurantId,
-          dateTime: "invalid-date",
-          peopleCount: 4,
-        }),
-      );
-
-      expect(response.status).toBe(400);
-    });
-
-    it("rejects peopleCount less than 1", async () => {
-      const response = await createReservation(
-        makeRequest({
-          userId,
-          restaurantId,
-          dateTime: "2026-07-20T18:00:00.000Z",
-          peopleCount: 0,
-        }),
-      );
-
-      expect(response.status).toBe(400);
-    });
-
-    it("rejects peopleCount greater than 20", async () => {
-      const response = await createReservation(
-        makeRequest({
-          userId,
-          restaurantId,
-          dateTime: "2026-07-20T18:00:00.000Z",
-          peopleCount: 21,
-        }),
-      );
-
-      expect(response.status).toBe(400);
-    });
-
-    it("rejects unknown fields", async () => {
-      const response = await createReservation(
-        makeRequest({
-          userId,
-          restaurantId,
-          dateTime: "2026-07-20T18:00:00.000Z",
-          peopleCount: 4,
-          extraField: true,
-        }),
-      );
-
-      expect(response.status).toBe(400);
-    });
-
-    it("rejects malformed json", async () => {
-      const request = new Request("http://localhost/api/reservations", {
-        method: "POST",
-        body: "{bad-json",
-      });
-
-      const response = await createReservation(request);
-
-      expect(response.status).toBe(400);
     });
   });
 

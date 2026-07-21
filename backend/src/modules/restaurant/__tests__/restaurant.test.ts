@@ -14,18 +14,29 @@ import {
   updateRestaurant,
 } from "../restaurant.controller";
 import { RestaurantRepository } from "../restaurant.repository";
+import { RestaurantEmailService } from "@/modules/notifications/restaurant/restaurant-email.service";
 
 vi.mock("../restaurant.repository", () => ({
   RestaurantRepository: {
     getAll: vi.fn(),
     getById: vi.fn(),
-    ownerExists: vi.fn(),
+    getOwner: vi.fn(),
+    getAdmins: vi.fn(),
     create: vi.fn(),
     update: vi.fn(),
     delete: vi.fn(),
     getPending: vi.fn(),
     approve: vi.fn(),
     reject: vi.fn(),
+  },
+}));
+
+vi.mock("@/modules/notifications/restaurant/restaurant-email.service", () => ({
+  RestaurantEmailService: {
+    sendRegistrationReceived: vi.fn().mockResolvedValue(undefined),
+    sendNewRegistrationToAdmin: vi.fn().mockResolvedValue(undefined),
+    sendApproved: vi.fn().mockResolvedValue(undefined),
+    sendRejected: vi.fn().mockResolvedValue(undefined),
   },
 }));
 
@@ -56,7 +67,7 @@ async function readJson(response: Response) {
 
 describe("restaurant controller", () => {
   beforeEach(() => {
-    vi.resetAllMocks();
+    vi.clearAllMocks();
   });
 
   it("returns all restaurants", async () => {
@@ -123,7 +134,17 @@ describe("restaurant controller", () => {
     }
 
     it("creates a restaurant", async () => {
-      vi.mocked(RestaurantRepository.ownerExists).mockResolvedValue({ id: ownerId });
+      vi.mocked(RestaurantRepository.getOwner).mockResolvedValue({
+        id: ownerId,
+        name: "Owner Name",
+        email: "owner@test.com",
+      });
+      vi.mocked(RestaurantRepository.getAdmins).mockResolvedValue([
+        {
+          name: "Admin",
+          email: "admin@test.com",
+        },
+      ]);
       vi.mocked(RestaurantRepository.create).mockResolvedValue(restaurant);
 
       const request = makeRequest({
@@ -150,7 +171,17 @@ describe("restaurant controller", () => {
     });
 
     it("creates a restaurant without optional fields", async () => {
-      vi.mocked(RestaurantRepository.ownerExists).mockResolvedValue({ id: ownerId });
+      vi.mocked(RestaurantRepository.getOwner).mockResolvedValue({
+        id: ownerId,
+        name: "Owner Name",
+        email: "owner@test.com",
+      });
+      vi.mocked(RestaurantRepository.getAdmins).mockResolvedValue([
+        {
+          name: "Admin",
+          email: "admin@test.com",
+        },
+      ]);
       vi.mocked(RestaurantRepository.create).mockResolvedValue(restaurant);
 
       const request = makeRequest({ ownerId, name: "Foodie Land" });
@@ -158,6 +189,7 @@ describe("restaurant controller", () => {
       const response = await createRestaurant(request);
 
       expect(response.status).toBe(201);
+      console.log(await readJson(response));
       expect(RestaurantRepository.create).toHaveBeenCalledWith(
         expect.objectContaining({
           ownerId,
@@ -167,7 +199,17 @@ describe("restaurant controller", () => {
     });
 
     it("creates a restaurant in pending state and ignores client-controlled approval fields", async () => {
-      vi.mocked(RestaurantRepository.ownerExists).mockResolvedValue({ id: ownerId });
+      vi.mocked(RestaurantRepository.getOwner).mockResolvedValue({
+        id: ownerId,
+        name: "Owner Name",
+        email: "owner@test.com",
+      });
+      vi.mocked(RestaurantRepository.getAdmins).mockResolvedValue([
+        {
+          name: "Admin",
+          email: "admin@test.com",
+        },
+      ]);
       vi.mocked(RestaurantRepository.create).mockResolvedValue(restaurant);
 
       const request = makeRequest({
@@ -182,6 +224,7 @@ describe("restaurant controller", () => {
       const response = await createRestaurant(request);
 
       expect(response.status).toBe(201);
+      console.log(await readJson(response));
       expect(RestaurantRepository.create).toHaveBeenCalledWith(
         expect.objectContaining({
           ownerId,
@@ -193,7 +236,7 @@ describe("restaurant controller", () => {
     });
 
     it("returns 404 when the owner does not exist", async () => {
-      vi.mocked(RestaurantRepository.ownerExists).mockResolvedValue(null);
+      vi.mocked(RestaurantRepository.getOwner).mockResolvedValue(null);
 
       const request = makeRequest({ ownerId, name: "Foodie Land" });
 
@@ -213,7 +256,7 @@ describe("restaurant controller", () => {
       const response = await createRestaurant(request);
 
       expect(response.status).toBe(400);
-      expect(RestaurantRepository.ownerExists).not.toHaveBeenCalled();
+      expect(RestaurantRepository.getOwner).not.toHaveBeenCalled();
       expect(RestaurantRepository.create).not.toHaveBeenCalled();
     });
 
