@@ -137,12 +137,12 @@ exports.Prisma.RestaurantScalarFieldEnum = {
   ownerId: 'ownerId',
   name: 'name',
   description: 'description',
-  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   approvedAt: 'approvedAt',
   approvedBy: 'approvedBy',
   rejectionReason: 'rejectionReason',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  status: 'status'
 };
 
 exports.Prisma.RestaurantCategoryScalarFieldEnum = {

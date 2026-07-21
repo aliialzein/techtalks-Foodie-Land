@@ -41,10 +41,16 @@ export class RestaurantRepository {
     });
   }
 
-  static ownerExists(ownerId: string) {
+  static getOwner(ownerId: string) {
     return prisma.user.findUnique({
-      where: { id: ownerId },
-      select: { id: true },
+      where: {
+        id: ownerId,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
     });
   }
 
@@ -75,6 +81,14 @@ export class RestaurantRepository {
         approvedAt: new Date(),
         approvedBy: null,
       },
+      include: {
+        owner: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+      },
     });
   }
 
@@ -86,6 +100,25 @@ export class RestaurantRepository {
         approvedAt: null,
         approvedBy: null,
         rejectionReason: data.rejectionReason ?? null,
+      },
+      include: {
+        owner: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+  }
+  static getAdmins() {
+    return prisma.user.findMany({
+      where: {
+        role: "ADMIN",
+      },
+      select: {
+        name: true,
+        email: true,
       },
     });
   }
