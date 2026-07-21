@@ -252,7 +252,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\User\\Desktop\\foodieland\\test\\techtalks-Foodie-Land\\backend\\src\\generated\\prisma",
+      "value": "C:\\Users\\HP i5\\Downloads\\techtalks\\techtalks-Foodie-Land\\backend\\src\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -266,7 +266,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\User\\Desktop\\foodieland\\test\\techtalks-Foodie-Land\\backend\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\HP i5\\Downloads\\techtalks\\techtalks-Foodie-Land\\backend\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -280,6 +280,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
