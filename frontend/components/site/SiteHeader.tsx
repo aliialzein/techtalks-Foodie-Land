@@ -6,7 +6,7 @@ type NavKey = "home" | "restaurants" | "delivery" | "support";
 const LINKS: { key: NavKey; label: string; href: string }[] = [
   { key: "home", label: "Home", href: "/" },
   { key: "restaurants", label: "Resturants", href: "/restaurants" },
-  { key: "delivery", label: "Delivery", href: "#" },
+  { key: "delivery", label: "Delivery", href: "/delivery" },
   { key: "support", label: "Support", href: "/contact" },
 ];
 
