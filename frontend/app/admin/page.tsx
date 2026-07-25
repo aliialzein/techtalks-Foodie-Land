@@ -1,165 +1,129 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 
-import Link from "next/link";
-import {
-  ArrowRight,
-  ClipboardList,
-  Search,
-  BadgeCheck,
-} from "lucide-react";
-
+import { Receipt, ShoppingBag, Star, Trash2 } from "lucide-react";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import AdminHeader from "@/components/admin/AdminHeader";
-import { useTheme } from "@/hooks/useTheme";
+import AdminPanelHeader from "@/components/admin/AdminPanelHeader";
+import AdminFooter from "@/components/admin/AdminFooter";
 
-export default function AdminPage() {
-  const theme = useTheme();
-  const dark = theme !== "light";
+const ROWS = [
+  { name: "Giacomo Italian Bistro", orders: "1,428", revenue: "$47,506", rating: "4.9" },
+  { name: "SushiMaster Zen", orders: "980", revenue: "$32,109", rating: "4.8" },
+  { name: "The Europe Loft", orders: "2,109", revenue: "$25,809", rating: "4.7" },
+  { name: "Mesri Thai Street", orders: "810", revenue: "$20,438", rating: "4.6" },
+];
 
+export default function AdminOverviewPage() {
   return (
     <ProtectedRoute allowedRoles={["ADMIN"]}>
-      <div
-        className={`relative min-h-screen overflow-hidden px-4 py-12 transition-all duration-500 ${
-          dark
-            ? "bg-linear-to-br from-[#0f0f0f] via-[#1a0a00] to-[#0f0f0f]"
-            : "bg-linear-to-br from-[#fff7f0] via-[#ffe8d6] to-[#fff3eb]"
-        }`}
-      >
-        <div
-          className={`pointer-events-none absolute -top-24 -right-20 h-96 w-96 rounded-full blur-[80px] ${
-            dark ? "bg-orange-600/20" : "bg-orange-500/15"
-          }`}
-        />
+      <div className="flex min-h-screen flex-col bg-[#fafafb] font-[family-name:var(--font-cambay)] text-[#242424]">
+        <AdminPanelHeader active="overview" />
 
-        <div className="relative z-10 mx-auto w-full max-w-3xl">
-          <AdminHeader dark={dark} active="dashboard" />
-
-          <div className="mb-8">
-            <p
-              className={`text-sm font-medium uppercase tracking-[0.18em] ${
-                dark ? "text-orange-400" : "text-orange-600"
-              }`}
-            >
-              Admin
-            </p>
-
-            <h1
-              className={`mt-2 text-3xl font-bold tracking-tight ${
-                dark ? "text-white" : "text-gray-900"
-              }`}
-            >
-              Restaurant Approval Center
-            </h1>
-
-            <p
-              className={`mt-2 text-sm ${
-                dark ? "text-white/40" : "text-black/45"
-              }`}
-            >
-              Review restaurant submissions before publishing them on
-              FoodSpot.
+        <main className="mx-auto w-full max-w-[1120px] flex-1 px-6 py-10 sm:px-8 lg:px-12">
+          <div className="text-center">
+            <h1 className="text-[28px] font-bold text-[#1a1c1c] lg:text-[34px]">Overview</h1>
+            <p className="mt-2 text-[16px] text-[#5f5e5e]">
+              Real-time performance metrics for FoodSpot operations.
             </p>
           </div>
 
-          <Link
-            href="/admin/restaurants"
-            className={`group block overflow-hidden rounded-2xl border backdrop-blur-xl transition-all hover:-translate-y-1 ${
-              dark
-                ? "border-white/8 bg-[rgba(20,10,5,0.55)]"
-                : "border-white/70 bg-white/60"
-            }`}
-          >
-            <div className="flex h-36 items-center justify-center bg-linear-to-br from-orange-500/15 via-orange-400/10 to-orange-300/5">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-500/10">
-                <ClipboardList className="h-9 w-9 text-orange-500" />
-              </div>
+          {/* Stat cards */}
+          <div className="mx-auto mt-8 grid max-w-[720px] gap-6 sm:grid-cols-2">
+            <StatCard
+              icon={<Receipt className="h-5 w-5 text-[#d97a3a]" />}
+              delta="+12.5%"
+              label="Total Revenue"
+              value="$1,284,530"
+            />
+            <StatCard
+              icon={<ShoppingBag className="h-5 w-5 text-[#d97a3a]" />}
+              delta="+8.2%"
+              label="Total Orders"
+              value="45,102"
+            />
+          </div>
+
+          {/* Restaurants table */}
+          <div className="mx-auto mt-6 max-w-[820px] rounded-xl border border-[#eef0f3] bg-white p-6 shadow-[0_6px_24px_rgba(17,17,17,0.04)]">
+            <div className="flex items-center justify-between">
+              <h2 className="text-[20px] font-bold text-[#1a1c1c]">Resturants</h2>
+              <a href="/admin/restaurants" className="text-[14px] font-semibold text-[#d97a3a] hover:underline">
+                View All
+              </a>
             </div>
 
-            <div className="p-5">
-              <h2
-                className={`text-lg font-semibold ${
-                  dark ? "text-white" : "text-gray-900"
-                }`}
-              >
-                Pending Restaurants
-              </h2>
-
-              <p
-                className={`mt-2 text-sm ${
-                  dark ? "text-white/40" : "text-black/45"
-                }`}
-              >
-                Review restaurants waiting for admin approval.
-              </p>
-
-              <div className="mt-5">
-                <span className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-orange-600 to-orange-400 py-2 text-sm font-semibold text-white shadow-[0_4px_16px_rgba(234,88,12,0.3)] transition-all group-hover:-translate-y-px">
-                  Open Approval Queue
-                  <ArrowRight className="h-4 w-4" />
-                </span>
-              </div>
-            </div>
-          </Link>
-
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            <div
-              className={`rounded-2xl border p-5 backdrop-blur-xl ${
-                dark
-                  ? "border-white/8 bg-[rgba(20,10,5,0.55)]"
-                  : "border-white/70 bg-white/60"
-              }`}
-            >
-              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-orange-100">
-                <Search className="h-5 w-5 text-orange-600" />
-              </div>
-
-              <h3
-                className={`text-sm font-semibold ${
-                  dark ? "text-white" : "text-gray-900"
-                }`}
-              >
-                Review Requests
-              </h3>
-
-              <p
-                className={`mt-1 text-xs ${
-                  dark ? "text-white/40" : "text-black/45"
-                }`}
-              >
-                Check restaurant information before approval.
-              </p>
-            </div>
-
-            <div
-              className={`rounded-2xl border p-5 backdrop-blur-xl ${
-                dark
-                  ? "border-white/8 bg-[rgba(20,10,5,0.55)]"
-                  : "border-white/70 bg-white/60"
-              }`}
-            >
-              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-orange-100">
-                <BadgeCheck className="h-5 w-5 text-orange-600" />
-              </div>
-
-              <h3
-                className={`text-sm font-semibold ${
-                  dark ? "text-white" : "text-gray-900"
-                }`}
-              >
-                Approve Restaurants
-              </h3>
-
-              <p
-                className={`mt-1 text-xs ${
-                  dark ? "text-white/40" : "text-black/45"
-                }`}
-              >
-                Publish verified restaurants to the platform.
-              </p>
+            <div className="mt-4 overflow-x-auto">
+              <table className="w-full min-w-[560px] text-left">
+                <thead>
+                  <tr className="border-b border-[#eef0f3] text-[12px] uppercase tracking-wide text-[#8a8a8a]">
+                    <th className="py-3 pr-4 font-semibold">Restaurant Name</th>
+                    <th className="px-4 py-3 font-semibold">Total Orders</th>
+                    <th className="px-4 py-3 font-semibold">Total Revenue</th>
+                    <th className="px-4 py-3 font-semibold">Rating</th>
+                    <th className="py-3 pl-4 font-semibold">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {ROWS.map((r) => (
+                    <tr key={r.name} className="border-b border-[#f4f4f4] last:border-0">
+                      <td className="py-3 pr-4">
+                        <div className="flex items-center gap-3">
+                          <img src="/home/menu-plate.jpg" alt="" className="h-9 w-9 rounded-lg object-cover" />
+                          <span className="text-[14px] font-medium text-[#242424]">{r.name}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 text-[14px] tabular-nums text-[#5f5e5e]">{r.orders}</td>
+                      <td className="px-4 py-3 text-[14px] font-semibold tabular-nums text-[#d97a3a]">{r.revenue}</td>
+                      <td className="px-4 py-3">
+                        <span className="inline-flex items-center gap-1 text-[14px] text-[#5f5e5e]">
+                          <Star className="h-3.5 w-3.5 fill-[#f5a623] text-[#f5a623]" />
+                          {r.rating}
+                        </span>
+                      </td>
+                      <td className="py-3 pl-4">
+                        <button
+                          type="button"
+                          aria-label="Remove"
+                          className="text-[#8a8a8a] transition-colors hover:text-red-500"
+                        >
+                          <Trash2 className="h-[18px] w-[18px]" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
-        </div>
+        </main>
+
+        <AdminFooter />
       </div>
     </ProtectedRoute>
+  );
+}
+
+function StatCard({
+  icon,
+  delta,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  delta: string;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="rounded-xl border border-[#f0dccb] bg-white p-6 shadow-[0_6px_24px_rgba(17,17,17,0.04)]">
+      <div className="flex items-start justify-between">
+        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#f8ddc9]">{icon}</div>
+        <span className="rounded-md bg-[#fbe7d8] px-2 py-1 text-[12px] font-semibold text-[#d97a3a]">
+          {delta}
+        </span>
+      </div>
+      <p className="mt-4 text-[14px] text-[#8a8a8a]">{label}</p>
+      <p className="mt-1 text-[28px] font-bold text-[#1a1c1c]">{value}</p>
+    </div>
   );
 }
