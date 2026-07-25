@@ -1,16 +1,13 @@
 import { OAuth2Client } from "google-auth-library";
 
-const googleClientId = process.env.GOOGLE_CLIENT_ID;
-
-if (!googleClientId) {
-  throw new Error(
-    "GOOGLE_CLIENT_ID is missing"
-  );
-}
-
-const client = new OAuth2Client(googleClientId);
-
 export async function verifyGoogleToken(token: string) {
+  const googleClientId = process.env.GOOGLE_CLIENT_ID;
+  if (!googleClientId) {
+    throw new Error(
+      "GOOGLE_CLIENT_ID is missing"
+    );
+  }
+  const client = new OAuth2Client(googleClientId);
   const ticket = await client.verifyIdToken({
     idToken: token,
     audience: googleClientId,
