@@ -56,3 +56,34 @@ export async function meController(req: NextRequest) {
     return NextResponse.json({ message: "Invalid or expired token" }, { status: 401 });
   }
 }
+
+export async function googleController(req: NextRequest) {
+  try {
+    const body = await req.json();
+
+    if (!body.credential) {
+      return NextResponse.json(
+        { message: "Google credential is required" },
+        { status: 400 }
+      );
+    }
+
+    const result = await authService.googleLogin(
+      body.credential
+    );
+
+    return NextResponse.json(result, {
+      status: 200,
+    });
+
+  } catch (err: unknown) {
+    return NextResponse.json(
+      {
+        message: (err as Error).message,
+      },
+      {
+        status: 401,
+      }
+    );
+  }
+}

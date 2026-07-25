@@ -1,5 +1,5 @@
 'use client'
-
+import GoogleButton from "@/components/auth/GoogleButton";
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {Eye,EyeOff,ChefHat} from 'lucide-react'
@@ -200,6 +200,16 @@ export default function LoginPage() {
           >
             {loading ? 'Signing in…' : 'Sign in'}
           </button>
+          <div className="flex items-center gap-3 my-5">
+            <div className="h-px flex-1 bg-black/10" />
+            <span className="text-xs text-black/40">
+              OR
+            </span>
+            <div className="h-px flex-1 bg-black/10" />
+          </div>
+          <GoogleButton
+            onError={setError}
+          />
         </form>
 
         <p className={`text-center text-[0.82rem] mt-5 ${dark ? 'text-white/35' : 'text-black/40'}`}>
