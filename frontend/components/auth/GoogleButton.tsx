@@ -91,6 +91,8 @@ export default function GoogleButton({
             "Google authentication failed"
           )
         }
+        text="continue_with"
+        locale="en"
         width="100%"
       />
     </div>
