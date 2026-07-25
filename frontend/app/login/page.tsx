@@ -1,23 +1,19 @@
 'use client'
-import GoogleButton from "@/components/auth/GoogleButton";
+
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import {Eye,EyeOff,ChefHat} from 'lucide-react'
-
-import PageLoader from '@/components/ui/PageLoader'
-import { useTheme } from '@/hooks/useTheme'
+import GoogleButton from '@/components/auth/GoogleButton'
 import { saveSession } from '@/lib/auth'
 import { redirectAfterLogin } from '@/lib/redirects'
+import AuthShell from '@/components/site/AuthShell'
 
 export default function LoginPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
   const [remember, setRemember] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const theme = useTheme()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -51,177 +47,95 @@ export default function LoginPage() {
     }
   }
 
-  const dark = theme === 'dark'
-
-  const inputClass = `
-    w-full px-3.5 py-2.5 rounded-xl text-sm outline-none
-    transition-all duration-200
-    focus:ring-[3px] focus:ring-orange-500/20 focus:border-orange-500
-    ${dark
-      ? 'bg-white/5 border border-white/10 text-white placeholder:text-white/20'
-      : 'bg-white/70 border border-black/10 text-gray-900 placeholder:text-black/25'
-    }
-  `
-
-  const labelClass = `
-    block text-[0.7rem] font-medium tracking-widest uppercase mb-1.5
-    ${dark ? 'text-white/35' : 'text-black/40'}
-  `
+  const inputClass =
+    'h-12 w-full rounded-full border border-[#d9d9d9] bg-white px-5 text-[15px] text-[#242424] outline-none transition-colors placeholder:text-[#bdbdbd] focus:border-[#d97a3a] focus:ring-[3px] focus:ring-[#d97a3a]/15'
+  const labelClass = 'mb-1.5 block text-[14px] font-bold text-black'
 
   return (
-    <>
-      <PageLoader/>
-      <div className={`
-      min-h-screen flex items-center justify-center px-4
-      relative overflow-hidden transition-all duration-500
-      ${dark
-        ? 'bg-linear-to-br from-[#0f0f0f] via-[#1a0a00] to-[#0f0f0f]'
-        : 'bg-linear-to-br from-[#fff7f0] via-[#ffe8d6] to-[#fff3eb]'
-      }
-      `}>
+    <AuthShell>
+      <h1 className="text-[32px] font-bold leading-tight text-black">
+        Welcome Back!
+      </h1>
 
-      
+      {error && (
+        <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-3.5 py-2.5 text-sm text-red-600">
+          {error}
+        </div>
+      )}
 
-      <div className={`
-        absolute -top-24 -right-20 w-96 h-96 rounded-full
-        blur-[80px] pointer-events-none
-        ${dark ? 'bg-orange-600/20' : 'bg-orange-500/15'}
-      `}/>
-      <div className={`
-        absolute -bottom-20 -left-16 w-72 h-72 rounded-full
-        blur-[80px] pointer-events-none
-        ${dark ? 'bg-orange-400/[0.14]' : 'bg-orange-300/12'}
-      `}/>
-      <div className={`
-        absolute top-[40%] left-[10%] w-48 h-48 rounded-full
-        blur-[80px] pointer-events-none
-        ${dark ? 'bg-orange-600/8' : 'bg-orange-500/[0.07]'}
-      `}/>
-
-      <div className={`
-        relative z-10 w-full max-w-md rounded-3xl p-10
-        backdrop-blur-2xl
-        ${dark
-          ? 'bg-[rgba(20,10,5,0.55)] border border-white/8 shadow-[0_8px_48px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.06)]'
-          : 'bg-white/50 border border-white/75 shadow-[0_8px_48px_rgba(180,80,0,0.1),inset_0_1px_0_rgba(255,255,255,0.9)]'
-        }
-      `}>
-
-        <div className="flex items-center gap-2.5 mb-8">
-          <div className="w-9 h-9 bg-linear-to-br from-orange-600 to-orange-400 rounded-xl flex items-center justify-center shadow-[0_4px_12px_rgba(234,88,12,0.4)]">
-            <ChefHat className="w-5 h-5 text-white" />
-          </div>
-          <span className={`text-[1.05rem] font-semibold tracking-tight ${dark ? 'text-white' : 'text-gray-900'}`}>
-            Foodie<span className="text-orange-600">Land</span>
-          </span>
+      <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
+        <div>
+          <label htmlFor="email" className={labelClass}>
+            Email address
+          </label>
+          <input
+            id="email"
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className={inputClass}
+          />
         </div>
 
-        <h1 className={`text-2xl font-semibold tracking-tight mb-1 ${dark ? 'text-white' : 'text-gray-900'}`}>
-          Welcome back
-        </h1>
-        <p className={`text-sm mb-7 ${dark ? 'text-white/40' : 'text-black/45'}`}>
-          Sign in to continue to your account
-        </p>
-
-        {error && (
-          <div className={`
-            text-sm rounded-xl px-3.5 py-2.5 mb-5 border
-            ${dark
-              ? 'bg-red-500/10 border-red-500/30 text-red-400'
-              : 'bg-red-50 border-red-200 text-red-600'
-            }
-          `}>
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-
-          
-          <div>
-            <label htmlFor="email" className={labelClass}>Email</label>
-            <input
-              id="email"
-              type="email"
-              placeholder="name@gmail.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className={inputClass}
-            />
-          </div>
-
-          <div>
-            <label htmlFor="password" className={labelClass}>Password</label>
-            <div className="relative">
-              <input
-                id="password"
-                type={showPassword ? 'text' : 'password'}
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className={`${inputClass} pr-14`}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-orange-500 hover:text-orange-400"
-              >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-              </button>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between text-sm">
-            <label className={`flex items-center gap-2 cursor-pointer ${dark ? 'text-white/40' : 'text-black/45'}`}>
-              <input
-                type="checkbox"
-                checked={remember}
-                onChange={(e) => setRemember(e.target.checked)}
-                className="accent-orange-600 w-3.5 h-3.5"
-              />
-              Remember me
-            </label>
-            <a href="/forgot-password" className="text-orange-600 hover:underline font-medium text-[0.8rem]">
-              Forgot password?
+        <div>
+          <label htmlFor="password" className={labelClass}>
+            Password
+          </label>
+          <input
+            id="password"
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className={inputClass}
+          />
+          <div className="mt-1.5 text-right">
+            <a
+              href="/forgot-password"
+              className="text-[12px] text-[#6155f5] underline underline-offset-2 hover:opacity-80"
+            >
+              Forgot your password?
             </a>
           </div>
+        </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="
-              w-full py-3 rounded-xl text-sm font-semibold text-white
-              bg-linear-to-r from-orange-600 to-orange-400
-              shadow-[0_4px_20px_rgba(234,88,12,0.35)]
-              hover:shadow-[0_6px_24px_rgba(234,88,12,0.45)]
-              hover:-translate-y-px transition-all duration-200
-              disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0
-            "
-          >
-            {loading ? 'Signing in…' : 'Sign in'}
-          </button>
-          <div className="flex items-center gap-3 my-5">
-            <div className="h-px flex-1 bg-black/10" />
-            <span className="text-xs text-black/40">
-              OR
-            </span>
-            <div className="h-px flex-1 bg-black/10" />
-          </div>
-          <GoogleButton
-            onError={setError}
+        <label className="flex cursor-pointer items-center gap-2 text-[14px] text-[#333]">
+          <input
+            type="checkbox"
+            checked={remember}
+            onChange={(e) => setRemember(e.target.checked)}
+            className="h-[18px] w-[18px] accent-[#d97a3a]"
           />
-        </form>
+          Remember Me
+        </label>
 
-        <p className={`text-center text-[0.82rem] mt-5 ${dark ? 'text-white/35' : 'text-black/40'}`}>
+        <button
+          type="submit"
+          disabled={loading}
+          className="h-12 w-full rounded-full bg-[#d97a3a] font-[family-name:var(--font-inter)] text-[15px] font-bold text-white shadow-[0_4px_16px_rgba(217,122,58,0.3)] transition-all hover:-translate-y-px hover:bg-[#cc6d2f] disabled:opacity-60 disabled:hover:translate-y-0"
+        >
+          {loading ? 'Signing in…' : 'Login'}
+        </button>
+
+        <p className="text-center text-[14px] text-black">
           Don&apos;t have an account?{' '}
-          <a href="/register" className="text-orange-600 hover:underline font-medium">
+          <a
+            href="/register"
+            className="text-[#6155f5] underline underline-offset-2 hover:opacity-80"
+          >
             Sign up
           </a>
         </p>
 
-      </div>
-    </div>
-    </>
-  
+        <div className="my-1 flex items-center gap-4">
+          <div className="h-0.5 flex-1 bg-[#666]/25" />
+          <span className="text-[16px] text-[#666]">OR</span>
+          <div className="h-0.5 flex-1 bg-[#666]/25" />
+        </div>
+
+        <GoogleButton onError={setError} />
+      </form>
+    </AuthShell>
   )
 }

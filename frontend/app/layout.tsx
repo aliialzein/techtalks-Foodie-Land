@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import {
+  Geist,
+  Geist_Mono,
+  Cambay,
+  Inter,
+  Plus_Jakarta_Sans,
+} from "next/font/google";
 import "./globals.css";
 import GoogleProvider from "@/components/providers/GoogleProvider";
 
@@ -11,6 +17,19 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+// Fonts used by the FoodSpot design system (home / auth / marketing pages).
+const cambay = Cambay({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-cambay",
+});
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-jakarta",
 });
 
 export const metadata: Metadata = {
@@ -26,7 +45,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${cambay.variable} ${inter.variable} ${jakarta.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <GoogleProvider>
