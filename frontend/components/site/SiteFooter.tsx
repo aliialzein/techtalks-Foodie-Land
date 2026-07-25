@@ -23,7 +23,7 @@ export default function SiteFooter() {
           <div>
             <h4 className="text-[16px] font-bold text-[#d97a3a]">Support</h4>
             <ul className="mt-3 space-y-3 text-[14px] text-[#191d23]">
-              <li><a href="#" className="hover:text-[#d97a3a]">Contact Us</a></li>
+              <li><a href="/contact" className="hover:text-[#d97a3a]">Contact Us</a></li>
               <li><a href="#" className="hover:text-[#d97a3a]">FAQ</a></li>
               <li><a href="#" className="hover:text-[#d97a3a]">Tutorials</a></li>
             </ul>
