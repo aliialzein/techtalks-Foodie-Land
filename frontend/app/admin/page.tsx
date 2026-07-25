@@ -57,7 +57,7 @@ export default function AdminPage() {
               }`}
             >
               Review restaurant submissions before publishing them on
-              FoodieLand.
+              FoodSpot.
             </p>
           </div>
 
