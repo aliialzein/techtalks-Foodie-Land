@@ -92,7 +92,6 @@ export default function GoogleButton({
           )
         }
         text="continue_with"
-        locale="en"
         width="100%"
       />
     </div>
