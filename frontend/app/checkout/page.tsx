@@ -1,6 +1,6 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
-
+import PaymentStep from "@/components/checkout/PaymentStep";
 import { useState } from "react";
 import {
   AlertCircle,
@@ -31,13 +31,19 @@ export default function CheckoutPage() {
   const [placing, setPlacing] = useState(false);
   const [error, setError] = useState("");
   const [placed, setPlaced] = useState<Order | null>(null);
+  const [awaitingPayment, setAwaitingPayment] = useState<Order | null>(null);
 
   const handlePlace = async () => {
     if (!user) return;
     setPlacing(true);
     setError("");
     try {
-      setPlaced(await placeOrder(user.id));
+      const order = await placeOrder(user.id);
+      if (payment === "card") {
+        setAwaitingPayment(order);
+      } else {
+        setPlaced(order);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to place your order.");
     } finally {
@@ -76,6 +82,21 @@ export default function CheckoutPage() {
                 Back to menu
               </a>
             </div>
+          </div>
+        ) : awaitingPayment ? (
+          <div className="mx-auto mt-6 max-w-md">
+            <h1 className="text-center text-[22px] font-bold text-[#1a1c1c]">
+              Complete your payment
+            </h1>
+            <p className="mt-1 text-center text-sm text-[#5f5e5e]">
+              Order #{awaitingPayment.id.slice(0, 8)} · $
+              {awaitingPayment.totalPrice.toFixed(2)}
+            </p>
+            <PaymentStep
+              orderId={awaitingPayment.id}
+              amount={awaitingPayment.totalPrice}
+              onSuccess={() => setPlaced(awaitingPayment)}
+            />
           </div>
         ) : (
           <>
