@@ -4,6 +4,7 @@
 import { useCallback, useEffect, useState } from "react";
 import {
   AlertCircle,
+  FileDown,
   FolderPlus,
   Loader2,
   LogIn,
@@ -24,6 +25,7 @@ import {
   type Food,
 } from "@/lib/foods";
 import PanelHeader from "@/components/owner/PanelHeader";
+import { generatePdfReport } from "@/lib/pdf";
 
 const CATEGORIES = ["Appetizers", "Main Course", "Desserts", "Drinks"];
 
@@ -109,6 +111,45 @@ function MenuManager({ owner }: { owner: SessionUser }) {
 
   const editing = foods.find((f) => f.id === editingId) ?? null;
 
+  const exportMenuPdf = () => {
+    generatePdfReport({
+      title: "Menu Catalog",
+      subtitle: activeRestaurant?.name
+        ? `${activeRestaurant.name} — current menu items`
+        : "Current menu items",
+      fileName: `foodspot-menu-${(activeRestaurant?.name ?? "restaurant")
+        .toLowerCase()
+        .replace(/\s+/g, "-")}.pdf`,
+      sections: [
+        {
+          type: "stats",
+          items: [
+            { label: "Total Items", value: String(foods.length) },
+            {
+              label: "Available",
+              value: String(foods.filter((f) => f.isAvailable).length),
+            },
+            {
+              label: "Sold Out",
+              value: String(foods.filter((f) => !f.isAvailable).length),
+            },
+          ],
+        },
+        {
+          type: "table",
+          title: "Items",
+          head: ["Name", "Price", "Status", "Description"],
+          body: foods.map((f) => [
+            f.name,
+            `$${f.price.toFixed(2)}`,
+            f.isAvailable ? "Available" : "Sold Out",
+            f.description || "—",
+          ]),
+        },
+      ],
+    });
+  };
+
   if (restLoading) {
     return (
       <main className="flex flex-1 items-center justify-center py-24">
@@ -159,6 +200,14 @@ function MenuManager({ owner }: { owner: SessionUser }) {
           <span className="inline-flex cursor-default items-center gap-2 rounded-lg bg-[#f1efee] px-4 py-2.5 font-medium text-[#636262]">
             <FolderPlus className="h-4 w-4" /> Add New Category
           </span>
+          <button
+            type="button"
+            onClick={exportMenuPdf}
+            disabled={foods.length === 0}
+            className="inline-flex items-center gap-2 rounded-lg border border-[#e2e2e2] px-4 py-2.5 font-semibold text-[#242424] transition-colors hover:border-[#d97a3a] hover:text-[#d97a3a] disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            <FileDown className="h-4 w-4" /> Export to PDF
+          </button>
           <button
             type="button"
             onClick={() => {

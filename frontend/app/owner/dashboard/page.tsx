@@ -1,7 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import type { Metadata } from "next";
-import { ArrowDownLeft, FileDown, Receipt, ShoppingBag, ShoppingCart } from "lucide-react";
+import { ArrowDownLeft, Receipt, ShoppingBag, ShoppingCart } from "lucide-react";
 import PanelHeader from "@/components/owner/PanelHeader";
+import ExportDashboardPdfButton from "@/components/owner/ExportDashboardPdfButton";
 
 export const metadata: Metadata = {
   title: "Dashboard — FoodSpot Restaurant Panel",
@@ -121,14 +122,8 @@ export default function OwnerDashboardPage() {
             <AreaChart />
           </div>
         </div>
-
         <div className="mt-6 flex justify-end">
-          <button
-            type="button"
-            className="inline-flex items-center gap-2 rounded-lg bg-[#d97a3a] px-6 py-3 font-[family-name:var(--font-inter)] text-[15px] font-bold text-white transition-colors hover:bg-[#cc6d2f]"
-          >
-            <FileDown className="h-4 w-4" /> Export to PDF
-          </button>
+          <ExportDashboardPdfButton />
         </div>
       </main>
 
