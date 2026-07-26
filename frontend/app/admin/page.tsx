@@ -1,10 +1,11 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 
-import { Receipt, ShoppingBag, Star, Trash2 } from "lucide-react";
+import { FileDown, Receipt, ShoppingBag, Star, Trash2 } from "lucide-react";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import AdminPanelHeader from "@/components/admin/AdminPanelHeader";
 import AdminFooter from "@/components/admin/AdminFooter";
+import { generatePdfReport } from "@/lib/pdf";
 
 const ROWS = [
   { name: "Giacomo Italian Bistro", orders: "1,428", revenue: "$47,506", rating: "4.9" },
@@ -12,6 +13,29 @@ const ROWS = [
   { name: "The Europe Loft", orders: "2,109", revenue: "$25,809", rating: "4.7" },
   { name: "Mesri Thai Street", orders: "810", revenue: "$20,438", rating: "4.6" },
 ];
+
+function exportOverviewPdf() {
+  generatePdfReport({
+    title: "Operations Overview",
+    subtitle: "Real-time performance metrics for FoodSpot operations.",
+    fileName: "foodspot-admin-overview.pdf",
+    sections: [
+      {
+        type: "stats",
+        items: [
+          { label: "Total Revenue", value: "$1,284,530" },
+          { label: "Total Orders", value: "45,102" },
+        ],
+      },
+      {
+        type: "table",
+        title: "Restaurants",
+        head: ["Restaurant Name", "Total Orders", "Total Revenue", "Rating"],
+        body: ROWS.map((r) => [r.name, r.orders, r.revenue, r.rating]),
+      },
+    ],
+  });
+}
 
 export default function AdminOverviewPage() {
   return (
@@ -25,6 +49,16 @@ export default function AdminOverviewPage() {
             <p className="mt-2 text-[16px] text-[#5f5e5e]">
               Real-time performance metrics for FoodSpot operations.
             </p>
+          </div>
+
+          <div className="mt-6 flex justify-center">
+            <button
+              type="button"
+              onClick={exportOverviewPdf}
+              className="inline-flex items-center gap-2 rounded-lg border border-[#e2e2e2] bg-white px-5 py-2.5 font-[family-name:var(--font-inter)] text-[14px] font-semibold text-[#242424] transition-colors hover:border-[#d97a3a] hover:text-[#d97a3a]"
+            >
+              <FileDown className="h-4 w-4" /> Export to PDF
+            </button>
           </div>
 
           {/* Stat cards */}

@@ -3,12 +3,13 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronDown, Loader2, Store } from "lucide-react";
+import { ChevronDown, FileDown, Loader2, Store } from "lucide-react";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { getSession } from "@/lib/auth";
 import { apiRequest } from "@/lib/api";
 import AdminPanelHeader from "@/components/admin/AdminPanelHeader";
 import AdminFooter from "@/components/admin/AdminFooter";
+import { generatePdfReport } from "@/lib/pdf";
 
 type RestaurantListItem = {
   id: string;
@@ -100,6 +101,32 @@ function AdminRestaurantsContent() {
 
   const isAccepted = filter === "Accepted";
 
+  const exportApplicationsPdf = () => {
+    generatePdfReport({
+      title: "Restaurant Applications",
+      subtitle: "Pending partnership requests submitted to FoodSpot.",
+      fileName: "foodspot-admin-restaurant-applications.pdf",
+      sections: [
+        {
+          type: "stats",
+          items: [{ label: "Pending Applications", value: String(restaurants.length) }],
+        },
+        {
+          type: "table",
+          title: "Applications",
+          head: ["Restaurant", "Owner", "Owner Email", "Status", "Submitted"],
+          body: restaurants.map((r) => [
+            r.name,
+            r.owner.name,
+            r.owner.email,
+            r.status,
+            new Date(r.createdAt).toLocaleDateString(),
+          ]),
+        },
+      ],
+    });
+  };
+
   return (
     <div className="flex min-h-screen flex-col bg-[#fafafb] font-[family-name:var(--font-cambay)] text-[#242424]">
       <AdminPanelHeader active="applications" />
@@ -129,9 +156,19 @@ function AdminRestaurantsContent() {
               </button>
             ))}
           </div>
-          <span className="inline-flex cursor-default items-center gap-1.5 rounded-lg border border-[#e2e2e2] px-4 py-2 text-[14px] text-[#636262]">
-            Sort By <ChevronDown className="h-4 w-4" />
-          </span>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={exportApplicationsPdf}
+              disabled={loading || isAccepted || restaurants.length === 0}
+              className="inline-flex items-center gap-2 rounded-lg border border-[#e2e2e2] bg-white px-4 py-2 text-[14px] font-semibold text-[#242424] transition-colors hover:border-[#d97a3a] hover:text-[#d97a3a] disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              <FileDown className="h-4 w-4" /> Export to PDF
+            </button>
+            <span className="inline-flex cursor-default items-center gap-1.5 rounded-lg border border-[#e2e2e2] px-4 py-2 text-[14px] text-[#636262]">
+              Sort By <ChevronDown className="h-4 w-4" />
+            </span>
+          </div>
         </div>
 
         {message && (
