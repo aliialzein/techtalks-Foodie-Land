@@ -6,6 +6,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
 enum AuthProvider {
@@ -119,6 +120,16 @@ model Order {
   restaurant   Restaurant  @relation(fields: [restaurantId], references: [id])
   user         User        @relation(fields: [userId], references: [id])
   items        OrderItem[]
+  paymentStatus         PaymentStatus @default(UNPAID)
+  stripePaymentIntentId String?       @unique
+}
+
+enum PaymentStatus {
+  UNPAID
+  PROCESSING
+  PAID
+  FAILED
+  REFUNDED
 }
 
 model OrderItem {

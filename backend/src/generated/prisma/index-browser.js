@@ -199,7 +199,9 @@ exports.Prisma.OrderScalarFieldEnum = {
   restaurantId: 'restaurantId',
   status: 'status',
   totalPrice: 'totalPrice',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  paymentStatus: 'paymentStatus',
+  stripePaymentIntentId: 'stripePaymentIntentId'
 };
 
 exports.Prisma.OrderItemScalarFieldEnum = {
@@ -258,6 +260,14 @@ exports.OrderStatus = exports.$Enums.OrderStatus = {
   READY: 'READY',
   DELIVERED: 'DELIVERED',
   CANCELLED: 'CANCELLED'
+};
+
+exports.PaymentStatus = exports.$Enums.PaymentStatus = {
+  UNPAID: 'UNPAID',
+  PROCESSING: 'PROCESSING',
+  PAID: 'PAID',
+  FAILED: 'FAILED',
+  REFUNDED: 'REFUNDED'
 };
 
 exports.ReservationStatus = exports.$Enums.ReservationStatus = {
