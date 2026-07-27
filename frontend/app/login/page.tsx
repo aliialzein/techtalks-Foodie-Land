@@ -92,7 +92,7 @@ export default function LoginPage() {
           />
           <div className="mt-1.5 text-right">
             <a
-              href="/forgot-password"
+              href="/forgotpassword"
               className="text-[12px] text-[#6155f5] underline underline-offset-2 hover:opacity-80"
             >
               Forgot your password?
