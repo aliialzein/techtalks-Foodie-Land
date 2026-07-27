@@ -5,7 +5,7 @@ import {
   UnauthorizedError,
 } from "../../util/errors";
 import { RegistrationInput, LoginInput, AuthResult } from "./auth.types";
-import { createToken } from "./token";
+import { createAccessToken  } from "./token";
 import * as authRepository from "./auth.repository";
 import * as googleService from "./google.service";
 
@@ -43,7 +43,7 @@ export async function googleLogin(token: string): Promise<AuthResult> {
     );
   }
 
-  const jwt = createToken(user.id, user.email, user.role);
+  const jwt = createAccessToken (user.id, user.email, user.role);
 
   return {
     token: jwt,
@@ -70,7 +70,7 @@ export async function register(data: RegistrationInput): Promise<AuthResult> {
     role: data.role,
   });
 
-  const token = createToken(user.id, user.email, user.role);
+  const token = createAccessToken (user.id, user.email, user.role);
 
   return {
     token,
@@ -95,7 +95,7 @@ export async function login(data: LoginInput): Promise<AuthResult> {
     throw new UnauthorizedError("Wrong password");
   }
 
-  const token = createToken(user.id, user.email, user.role);
+  const token = createAccessToken (user.id, user.email, user.role);
 
   return {
     token,

@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { ForbiddenError, handleError, jsonResponse, UnauthorizedError } from "../../util/errors";
-import { readToken } from "../auth/token";
+import { readAccessToken } from "../auth/token";
 import { RestaurantService } from "./restaurant.service";
 import {
   createRestaurantSchema,
@@ -23,7 +23,7 @@ function getAuthenticatedUser(req?: NextRequest | Request) {
   const token = authHeader.split(" ")[1];
 
   try {
-    return readToken(token);
+    return readAccessToken(token);
   } catch {
     return null;
   }

@@ -53,3 +53,10 @@ export function updateGoogleAccount(
     },
   });
 }
+
+export function updatePassword(id: string, password: string) {
+  return prisma.user.update({
+    where: { id },
+    data: { password },
+  });
+}

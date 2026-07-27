@@ -119,3 +119,9 @@ export function handleError(error: unknown) {
     500,
   );
 }
+
+export class TooManyRequestsError extends AppError {
+  constructor(message = "Too many requests, please try again shortly") {
+    super({ statusCode: 429, message });
+  }
+}
