@@ -15,19 +15,37 @@ enum AuthProvider {
 }
 
 model User {
-  id           String        @id @default(uuid())
-  name         String
-  email        String        @unique
-  password     String?
-  provider     AuthProvider  @default(LOCAL)
-  googleId     String?       @unique
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  role         UserRole      @default(CUSTOMER)
-  cart         Cart?
-  orders       Order[]
-  reservations Reservation[]
-  restaurants  Restaurant[]
+  id             String          @id @default(uuid())
+  name           String
+  email          String          @unique
+  password       String?
+  provider       AuthProvider    @default(LOCAL)
+  googleId       String?         @unique
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  role           UserRole        @default(CUSTOMER)
+  cart           Cart?
+  orders         Order[]
+  reservations   Reservation[]
+  restaurants    Restaurant[]
+  passwordResets PasswordReset[]
+}
+
+model PasswordReset {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  otpHash String
+
+  expiresAt DateTime
+
+  verified Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
 }
 
 model Restaurant {

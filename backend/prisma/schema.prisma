@@ -28,6 +28,19 @@ model User {
   orders       Order[]
   reservations Reservation[]
   restaurants  Restaurant[]
+  passwordResets PasswordReset[]
+
+}
+
+model PasswordReset {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  otpHash    String
+  expiresAt  DateTime
+  verified   Boolean @default(false)
+  createdAt  DateTime @default(now())
+  @@index([userId])
 }
 
 model Restaurant {

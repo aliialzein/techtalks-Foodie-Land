@@ -19,4 +19,9 @@ export const EMAIL_SUBJECTS = {
     delivered: "Order Delivered",
     cancelled: "Order Cancelled",
   },
+
+  auth: {
+    passwordResetOtp: "Food Spot Password Reset Code",
+    passwordChanged: "Food Spot Password Changed",
+  },
 } as const;

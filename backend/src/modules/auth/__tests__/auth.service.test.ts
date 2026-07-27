@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 
 import * as authRepository from "../auth.repository";
 import * as googleService from "../google.service";
-import { createToken } from "../token";
+import { createAccessToken  } from "../token";
 
 import {
   register,
@@ -32,7 +32,7 @@ vi.mock("../google.service", () => ({
 }));
 
 vi.mock("../token", () => ({
-  createToken: vi.fn(),
+  createAccessToken : vi.fn(),
 }));
 
 describe("Auth Service", () => {
@@ -56,7 +56,7 @@ describe("Auth Service", () => {
           email: "ali@test.com",
           role: "CUSTOMER",
         } as any);
-      vi.mocked(createToken)
+      vi.mocked(createAccessToken )
         .mockReturnValue("jwt-token");
 
       // Act
@@ -111,7 +111,7 @@ describe("Auth Service", () => {
         .mockResolvedValue(
           true as never
         );
-      vi.mocked(createToken)
+      vi.mocked(createAccessToken )
         .mockReturnValue(
           "jwt-token"
         );
@@ -198,7 +198,7 @@ describe("Auth Service", () => {
         role:"CUSTOMER",
         provider:"GOOGLE",
       } as any);
-      vi.mocked(createToken)
+      vi.mocked(createAccessToken )
         .mockReturnValue(
           "google-token"
         );
@@ -241,7 +241,7 @@ describe("Auth Service", () => {
         provider:"GOOGLE",
         googleId:"google-id",
       } as any);
-      vi.mocked(createToken)
+      vi.mocked(createAccessToken )
         .mockReturnValue(
           "jwt-token"
         );
@@ -287,7 +287,7 @@ describe("Auth Service", () => {
         role:"CUSTOMER",
         provider:"GOOGLE",
       } as any);
-      vi.mocked(createToken).mockReturnValue("jwt-token");
+      vi.mocked(createAccessToken ).mockReturnValue("jwt-token");
 
       // Act
       await googleLogin("google-token");

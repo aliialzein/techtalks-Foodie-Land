@@ -7,11 +7,11 @@ vi.mock("jsonwebtoken", () => ({
 }))
 
 import jwt from "jsonwebtoken"
-import { readToken } from "../token"
+import { readAccessToken } from "../token"
 
 const jwtMock = jwt as any
 
-describe("readToken()", () => {
+describe("readAccessToken()", () => {
   beforeEach(() => vi.clearAllMocks())
 
   it("should decode token", () => {
@@ -19,10 +19,11 @@ describe("readToken()", () => {
       id: "1",
       email: "test@test.com",
       role: "CUSTOMER",
+      type: "ACCESS",
     })
 
-    const result = readToken("token")
-
+    const result = readAccessToken("token")
+    expect(result.type).toBe("ACCESS");
     expect(result.id).toBe("1")
   })
 
@@ -31,6 +32,6 @@ describe("readToken()", () => {
       throw new Error("invalid")
     })
 
-    expect(() => readToken("bad")).toThrow("invalid")
+    expect(() => readAccessToken("bad")).toThrow("invalid")
   })
 })

@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 process.env.JWT_SECRET = "test-secret";
 import { RestaurantStatus } from "@/generated/prisma";
-import { createToken } from "../../auth/token";
+import { createAccessToken } from "../../auth/token";
 import {
   approveRestaurant,
   createRestaurant,
@@ -348,7 +348,7 @@ describe("restaurant controller", () => {
   it("returns pending restaurants", async () => {
     vi.mocked(RestaurantRepository.getPending).mockResolvedValue([restaurant]);
 
-    const token = createToken(ownerId, "owner@example.com", "ADMIN");
+    const token = createAccessToken(ownerId, "owner@example.com", "ADMIN");
     const request = new Request("http://localhost/api/restaurants/pending", {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -383,7 +383,7 @@ describe("restaurant controller", () => {
       status: "APPROVED",
     });
 
-    const token = createToken(ownerId, "owner@example.com", "ADMIN");
+    const token = createAccessToken(ownerId, "owner@example.com", "ADMIN", );
     const request = new Request("http://localhost/api/restaurants/" + restaurantId, {
       method: "PATCH",
       headers: {
@@ -405,7 +405,7 @@ describe("restaurant controller", () => {
       rejectionReason: "Incomplete details",
     });
 
-    const token = createToken(ownerId, "owner@example.com", "ADMIN");
+    const token = createAccessToken(ownerId, "owner@example.com", "ADMIN");
     const request = new Request("http://localhost/api/restaurants/" + restaurantId, {
       method: "PATCH",
       headers: {
