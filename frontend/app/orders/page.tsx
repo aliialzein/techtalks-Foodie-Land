@@ -10,16 +10,13 @@ import {
 } from "lucide-react";
 import { cancelOrder, getOrders, type Order } from "@/lib/orders";
 import { useCurrentUser } from "@/lib/auth";
-import { useTheme } from "@/hooks/useTheme";
-import { useCart } from "@/hooks/useCart";
-import AppHeader from "@/components/AppHeader";
+import SiteHeader from "@/components/site/SiteHeader";
+import SiteFooter from "@/components/site/SiteFooter";
 import OrderCard from "@/components/orders/OrderCard";
 
 export default function OrdersPage() {
-  const theme = useTheme();
-  const dark = theme !== "light"; // default to dark before the theme resolves
+  const dark = false;
   const user = useCurrentUser();
-  const { count: cartCount } = useCart();
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -68,27 +65,10 @@ export default function OrdersPage() {
   };
 
   return (
-    <div
-      className={`relative min-h-screen overflow-hidden px-4 py-12 transition-all duration-500 ${
-        dark
-          ? "bg-linear-to-br from-[#0f0f0f] via-[#1a0a00] to-[#0f0f0f]"
-          : "bg-linear-to-br from-[#fff7f0] via-[#ffe8d6] to-[#fff3eb]"
-      }`}
-    >
-      <div
-        className={`pointer-events-none absolute -top-24 -right-20 h-96 w-96 rounded-full blur-[80px] ${
-          dark ? "bg-orange-600/20" : "bg-orange-500/15"
-        }`}
-      />
-      <div
-        className={`pointer-events-none absolute -bottom-20 -left-16 h-72 w-72 rounded-full blur-[80px] ${
-          dark ? "bg-orange-400/[0.14]" : "bg-orange-300/12"
-        }`}
-      />
+    <div className="flex min-h-screen flex-col bg-[#fafafb] font-[family-name:var(--font-cambay)] text-[#242424]">
+      <SiteHeader />
 
-      <div className="relative z-10 mx-auto w-full max-w-2xl">
-        <AppHeader dark={dark} cartCount={cartCount} active="orders" />
-
+      <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-10">
         <header className="mb-8 flex items-end justify-between gap-4">
           <div>
             <h1
@@ -244,7 +224,9 @@ export default function OrdersPage() {
             ))}
           </div>
         )}
-      </div>
+      </main>
+
+      <SiteFooter />
     </div>
   );
 }

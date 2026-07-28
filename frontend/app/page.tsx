@@ -1,20 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 import type { Metadata } from "next";
 import SiteFooter from "@/components/site/SiteFooter";
-import HeaderAuth from "@/components/site/HeaderAuth";
+import SiteHeader from "@/components/site/SiteHeader";
 
 export const metadata: Metadata = {
   title: "FoodSpot — Discover Great Food, All in One Place",
   description:
     "Discover local restaurants, compare menus, and enjoy fast, convenient ordering from your favorite places.",
 };
-
-const NAV = [
-  { label: "Home", href: "/", active: true },
-  { label: "About", href: "#about" },
-  { label: "Resturants", href: "/restaurants" },
-  { label: "Support", href: "/contact" },
-];
 
 const FEATURES = [
   {
@@ -38,32 +31,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-[#fafafb] font-[family-name:var(--font-cambay)] text-[#242424]">
       {/* ---------- Header ---------- */}
-      <header className="sticky top-0 z-50 border-b-[1.5px] border-[#eef0f3] bg-white">
-        <div className="mx-auto flex h-20 w-full max-w-[1280px] items-center justify-between gap-6 px-6 sm:px-8 lg:px-12">
-          <div className="flex items-center gap-8 lg:gap-12">
-            <a href="/" className="shrink-0">
-              <img src="/home/logo.png" alt="FoodSpot" className="h-9 w-auto" />
-            </a>
-            <nav className="hidden items-center gap-8 font-[family-name:var(--font-inter)] text-[15px] font-medium lg:flex">
-              {NAV.map((item) => (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  className={
-                    item.active
-                      ? "text-[#d97a3a] underline underline-offset-4"
-                      : "text-[#242424] transition-colors hover:text-[#d97a3a]"
-                  }
-                >
-                  {item.label}
-                </a>
-              ))}
-            </nav>
-          </div>
-
-          <HeaderAuth variant="marketing" />
-        </div>
-      </header>
+      <SiteHeader active="home" />
 
       {/* ---------- Hero ---------- */}
       <section className="mx-auto grid w-full max-w-[1280px] items-center gap-10 px-6 py-12 sm:px-8 lg:grid-cols-2 lg:gap-12 lg:px-12 lg:py-20">

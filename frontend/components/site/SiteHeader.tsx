@@ -36,7 +36,7 @@ export default function SiteHeader({ active }: { active?: NavKey }) {
           </nav>
         </div>
 
-        <HeaderAuth variant="app" />
+        <HeaderAuth />
       </div>
     </header>
   );
