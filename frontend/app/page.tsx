@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import type { Metadata } from "next";
 import SiteFooter from "@/components/site/SiteFooter";
+import HeaderAuth from "@/components/site/HeaderAuth";
 
 export const metadata: Metadata = {
   title: "FoodSpot — Discover Great Food, All in One Place",
@@ -11,8 +12,8 @@ export const metadata: Metadata = {
 const NAV = [
   { label: "Home", href: "/", active: true },
   { label: "About", href: "#about" },
-  { label: "Resturants", href: "/menu" },
-  { label: "Support", href: "#support" },
+  { label: "Resturants", href: "/restaurants" },
+  { label: "Support", href: "/contact" },
 ];
 
 const FEATURES = [
@@ -60,26 +61,7 @@ export default function HomePage() {
             </nav>
           </div>
 
-          <div className="flex items-center gap-3">
-            <img
-              src="/home/globe.svg"
-              alt=""
-              className="hidden h-6 w-6 sm:block"
-            />
-            <a
-              href="/login"
-              className="inline-flex items-center gap-1.5 rounded-full bg-[#f0f0f0] px-4 py-2.5 font-[family-name:var(--font-inter)] text-sm font-medium text-[#242424] transition-colors hover:bg-[#e6e6e6]"
-            >
-              Sign in
-              <img src="/home/arrow-right.svg" alt="" className="h-4 w-4" />
-            </a>
-            <a
-              href="/register"
-              className="inline-flex items-center rounded-full bg-[#d97a3a] px-4 py-2.5 font-[family-name:var(--font-inter)] text-sm font-bold text-white shadow-[0_4px_16px_rgba(217,122,58,0.3)] transition-all hover:-translate-y-px hover:bg-[#cc6d2f]"
-            >
-              Get Started
-            </a>
-          </div>
+          <HeaderAuth variant="marketing" />
         </div>
       </header>
 
@@ -157,7 +139,7 @@ export default function HomePage() {
       </section>
 
       {/* ---------- What Makes Special ---------- */}
-      <section className="mx-auto w-full max-w-[1280px] px-6 py-16 text-center sm:px-8 lg:px-12">
+      <section id="about" className="mx-auto w-full max-w-[1280px] scroll-mt-24 px-6 py-16 text-center sm:px-8 lg:px-12">
         <h2 className="text-[28px] font-bold text-black lg:text-[32px]">
           What Makes Food Spot Special?
         </h2>

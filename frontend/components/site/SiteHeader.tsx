@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { Globe, ShoppingCart, User } from "lucide-react";
+import HeaderAuth from "./HeaderAuth";
 
 type NavKey = "home" | "restaurants" | "delivery" | "support";
 
@@ -36,15 +36,7 @@ export default function SiteHeader({ active }: { active?: NavKey }) {
           </nav>
         </div>
 
-        <div className="flex items-center gap-4 text-[#242424]">
-          <Globe className="hidden h-5 w-5 text-black/70 sm:block" />
-          <a href="/cart" aria-label="Cart" className="transition-colors hover:text-[#d97a3a]">
-            <ShoppingCart className="h-5 w-5" />
-          </a>
-          <a href="/login" aria-label="Account" className="transition-colors hover:text-[#d97a3a]">
-            <User className="h-5 w-5" />
-          </a>
-        </div>
+        <HeaderAuth variant="app" />
       </div>
     </header>
   );

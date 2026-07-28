@@ -6,14 +6,20 @@ export interface Restaurant {
   name: string;
   description: string | null;
   isActive: boolean;
+  status?: string;
   createdAt: string;
-  owner?: { id: string; name: string };
+  owner?: { id: string; name: string; email?: string };
 }
 
 export function getMyRestaurants(ownerId: string): Promise<Restaurant[]> {
   return apiRequest<Restaurant[]>(
     `/api/restaurants?ownerId=${encodeURIComponent(ownerId)}`,
   );
+}
+
+// All restaurants (used by the public listing + admin overview).
+export function getRestaurants(): Promise<Restaurant[]> {
+  return apiRequest<Restaurant[]>("/api/restaurants");
 }
 
 export function createRestaurant(input: {

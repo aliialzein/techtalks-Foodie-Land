@@ -1,28 +1,19 @@
+"use client";
 /* eslint-disable @next/next/no-img-element */
-import type { Metadata } from "next";
 import { ArrowRight, Building2, Info, MapPin } from "lucide-react";
+import { useCart } from "@/hooks/useCart";
 import SiteHeader from "@/components/site/SiteHeader";
 import SiteFooter from "@/components/site/SiteFooter";
 
-export const metadata: Metadata = {
-  title: "Delivery — FoodSpot",
-  description: "Where should we send your order? Enter your delivery details.",
-};
-
 const STEPS = ["Review", "Options", "Delivery"];
-
-const SUMMARY = [
-  { label: "Items (3)", value: "$42.50" },
-  { label: "Delivery Fee", value: "$2.99" },
-  { label: "Service Fee", value: "$1.50" },
-];
-
-const SELECTION = [
-  { name: "Truffle Umami Burger", qty: "x1", img: "/home/delivery-item-1.jpg" },
-  { name: "Parmesan Truffle Fries", qty: "x2", img: "/home/delivery-item-2.jpg" },
-];
+const DELIVERY_FEE = 2.99;
+const SERVICE_FEE = 1.5;
 
 export default function DeliveryPage() {
+  const { items, subtotal } = useCart();
+  const itemCount = items.reduce((n, i) => n + i.quantity, 0);
+  const total = subtotal + DELIVERY_FEE + SERVICE_FEE;
+
   return (
     <div className="flex min-h-screen flex-col bg-[#fafafb] font-[family-name:var(--font-jakarta)] text-[#242424]">
       <SiteHeader active="delivery" />
@@ -120,15 +111,21 @@ export default function DeliveryPage() {
             </h2>
 
             <div className="space-y-3">
-              {SUMMARY.map((r) => (
-                <div key={r.label} className="flex items-center justify-between text-[16px] text-[#5f5e5e]">
-                  <span>{r.label}</span>
-                  <span>{r.value}</span>
-                </div>
-              ))}
+              <div className="flex items-center justify-between text-[16px] text-[#5f5e5e]">
+                <span>Items ({itemCount})</span>
+                <span>${subtotal.toFixed(2)}</span>
+              </div>
+              <div className="flex items-center justify-between text-[16px] text-[#5f5e5e]">
+                <span>Delivery Fee</span>
+                <span>${DELIVERY_FEE.toFixed(2)}</span>
+              </div>
+              <div className="flex items-center justify-between text-[16px] text-[#5f5e5e]">
+                <span>Service Fee</span>
+                <span>${SERVICE_FEE.toFixed(2)}</span>
+              </div>
               <div className="flex items-center justify-between border-t border-[#d97a3a] pt-3">
                 <span className="text-[24px] font-semibold text-[#1a1c1c]">Total</span>
-                <span className="text-[24px] font-semibold text-[#d97a3a]">$46.99</span>
+                <span className="text-[24px] font-semibold text-[#d97a3a]">${total.toFixed(2)}</span>
               </div>
             </div>
 
@@ -150,21 +147,25 @@ export default function DeliveryPage() {
               <p className="text-[14px] font-semibold uppercase tracking-[0.7px] text-[#d97a3a]">
                 Your Selection
               </p>
-              {SELECTION.map((item) => (
-                <div key={item.name} className="flex items-center gap-3">
-                  <img
-                    src={item.img}
-                    alt={item.name}
-                    className="h-12 w-12 shrink-0 rounded-lg object-cover"
-                  />
-                  <div className="min-w-0">
-                    <p className="truncate text-[14px] font-semibold tracking-[0.14px] text-[#1a1c1c]">
-                      {item.name}
-                    </p>
-                    <p className="text-[12px] font-medium text-[#5f5e5e]">{item.qty}</p>
+              {items.length === 0 ? (
+                <p className="text-[13px] text-[#8a8a8a]">Your cart is empty.</p>
+              ) : (
+                items.map((item) => (
+                  <div key={item.id} className="flex items-center gap-3">
+                    <img
+                      src="/home/menu-plate.jpg"
+                      alt={item.food.name}
+                      className="h-12 w-12 shrink-0 rounded-lg object-cover"
+                    />
+                    <div className="min-w-0">
+                      <p className="truncate text-[14px] font-semibold tracking-[0.14px] text-[#1a1c1c]">
+                        {item.food.name}
+                      </p>
+                      <p className="text-[12px] font-medium text-[#5f5e5e]">x{item.quantity}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </aside>
         </div>

@@ -10,13 +10,12 @@ import { useCart } from "@/hooks/useCart";
 import SiteHeader from "@/components/site/SiteHeader";
 import SiteFooter from "@/components/site/SiteFooter";
 
-const CATEGORIES = ["All", "Mains", "Starters", "Grill", "Special"];
-
 export default function MenuPage() {
   const router = useRouter();
   const user = useCurrentUser();
   const { add } = useCart();
 
+  const [restaurantId, setRestaurantId] = useState<string | undefined>(undefined);
   const [foods, setFoods] = useState<Food[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -24,17 +23,23 @@ export default function MenuPage() {
   const [addedId, setAddedId] = useState<string | null>(null);
   const [addingId, setAddingId] = useState<string | null>(null);
 
+  useEffect(() => {
+    const rid = new URLSearchParams(window.location.search).get("restaurantId");
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setRestaurantId(rid ?? undefined);
+  }, []);
+
   const load = useCallback(async () => {
     setLoading(true);
     setError("");
     try {
-      setFoods(await getFoods());
+      setFoods(await getFoods(restaurantId));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load the menu.");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [restaurantId]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -90,21 +95,6 @@ export default function MenuPage() {
           />
         </div>
 
-        <div className="flex flex-wrap items-center justify-center gap-3">
-          {CATEGORIES.map((c, i) => (
-            <button
-              key={c}
-              type="button"
-              className={
-                i === 0
-                  ? "rounded-full bg-[#e87c3e] px-8 py-2.5 text-[16px] text-white"
-                  : "rounded-full border border-[#dcc1b4] bg-[#f5f3f3] px-8 py-2.5 text-[16px] text-[#636262] transition-colors hover:border-[#d97a3a] hover:text-[#d97a3a]"
-              }
-            >
-              {c}
-            </button>
-          ))}
-        </div>
       </section>
 
       {/* ---------- Plates ---------- */}

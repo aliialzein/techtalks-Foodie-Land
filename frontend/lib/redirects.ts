@@ -17,7 +17,8 @@ export function redirectAfterLogin(
       break;
 
     default:
-      router.replace("/menu");
+      // Customers land on the home page after signing in (not a random menu).
+      router.replace("/");
   }
 }
 
