@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import Link from "next/link";
 
 // Shared FoodSpot footer used across the marketing + auth pages.
 export default function SiteFooter() {
@@ -23,16 +24,16 @@ export default function SiteFooter() {
           <div>
             <h4 className="text-[16px] font-bold text-[#d97a3a]">Support</h4>
             <ul className="mt-3 space-y-3 text-[14px] text-[#191d23]">
-              <li><a href="/contact" className="hover:text-[#d97a3a]">Contact Us</a></li>
-              <li><a href="#" className="hover:text-[#d97a3a]">FAQ</a></li>
-              <li><a href="#" className="hover:text-[#d97a3a]">Tutorials</a></li>
+              <li><Link href="/contact" className="hover:text-[#d97a3a]">Contact Us</Link></li>
+              <li><Link href="/menu" className="hover:text-[#d97a3a]">Explore Menu</Link></li>
+              <li><Link href="/restaurants" className="hover:text-[#d97a3a]">Browse Restaurants</Link></li>
             </ul>
           </div>
           <div>
             <h4 className="text-[16px] font-bold text-[#d97a3a]">Resources</h4>
             <ul className="mt-3 space-y-3 text-[14px] text-[#191d23]">
-              <li><a href="#" className="hover:text-[#d97a3a]">A-Z Index</a></li>
-              <li><a href="#" className="hover:text-[#d97a3a]">Privacy and Legal</a></li>
+              <li><Link href="/" className="hover:text-[#d97a3a]">Home</Link></li>
+              <li><Link href="/login" className="hover:text-[#d97a3a]">Account</Link></li>
             </ul>
           </div>
         </div>

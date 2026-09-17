@@ -168,7 +168,6 @@ function ProductCard({
   tag,
   tagClass,
   img,
-  dark,
   title,
   desc,
   orders,
@@ -177,7 +176,6 @@ function ProductCard({
   tag: string;
   tagClass: string;
   img?: string;
-  dark?: boolean;
   title: string;
   desc: string;
   orders: string;

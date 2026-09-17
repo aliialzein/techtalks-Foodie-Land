@@ -6,6 +6,11 @@ import AuthShell from '@/components/site/AuthShell'
 
 type Step = 'email' | 'otp' | 'password' | 'success'
 
+type ErrorPayload = {
+  message?: string
+  errors?: Record<string, unknown> | unknown[]
+}
+
 const RESEND_COOLDOWN = 60
 
 export default function ForgotPasswordPage() {
@@ -47,15 +52,15 @@ export default function ForgotPasswordPage() {
     }, 1000)
   }
 
-  function extractMessage(data: any, fallback: string) {
-    return (
-      data?.message ||
-      (data?.errors &&
-        (Array.isArray(data.errors)
-          ? data.errors[0]?.message
-          : Object.values(data.errors).flat()[0])) ||
-      fallback
-    )
+  function extractMessage(data: ErrorPayload | null | undefined, fallback: string) {
+    const errors = data?.errors
+    const firstError = Array.isArray(errors)
+      ? errors[0]
+      : errors && typeof errors === 'object'
+        ? Object.values(errors).flat()[0]
+        : undefined
+
+    return data?.message || (typeof firstError === 'string' ? firstError : undefined) || fallback
   }
 
   async function handleSendOtp(e: React.FormEvent) {
@@ -235,7 +240,7 @@ export default function ForgotPasswordPage() {
 
       {step === 'email' && (
         <p className="mt-2 text-[14px] text-[#666]">
-          Enter your email address and we'll send you a verification code.
+          Enter your email address and we&apos;ll send you a verification code.
         </p>
       )}
 

@@ -1,6 +1,7 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 
+import Link from "next/link";
 import { FileDown, Receipt, ShoppingBag, Star, Trash2 } from "lucide-react";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import AdminPanelHeader from "@/components/admin/AdminPanelHeader";
@@ -81,9 +82,9 @@ export default function AdminOverviewPage() {
           <div className="mx-auto mt-6 max-w-[820px] rounded-xl border border-[#eef0f3] bg-white p-6 shadow-[0_6px_24px_rgba(17,17,17,0.04)]">
             <div className="flex items-center justify-between">
               <h2 className="text-[20px] font-bold text-[#1a1c1c]">Resturants</h2>
-              <a href="/admin/restaurants" className="text-[14px] font-semibold text-[#d97a3a] hover:underline">
+              <Link href="/admin/restaurants" className="text-[14px] font-semibold text-[#d97a3a] hover:underline">
                 View All
-              </a>
+              </Link>
             </div>
 
             <div className="mt-4 overflow-x-auto">

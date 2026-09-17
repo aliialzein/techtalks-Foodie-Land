@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import type { Metadata } from "next";
+import Link from "next/link";
 import SiteFooter from "@/components/site/SiteFooter";
 
 export const metadata: Metadata = {
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
 const NAV = [
   { label: "Home", href: "/", active: true },
   { label: "About", href: "#about" },
-  { label: "Resturants", href: "/menu" },
+  { label: "Restaurants", href: "/menu" },
   { label: "Support", href: "#support" },
 ];
 
@@ -40,12 +41,12 @@ export default function HomePage() {
       <header className="sticky top-0 z-50 border-b-[1.5px] border-[#eef0f3] bg-white">
         <div className="mx-auto flex h-20 w-full max-w-[1280px] items-center justify-between gap-6 px-6 sm:px-8 lg:px-12">
           <div className="flex items-center gap-8 lg:gap-12">
-            <a href="/" className="shrink-0">
+            <Link href="/" className="shrink-0">
               <img src="/home/logo.png" alt="FoodSpot" className="h-9 w-auto" />
-            </a>
+            </Link>
             <nav className="hidden items-center gap-8 font-[family-name:var(--font-inter)] text-[15px] font-medium lg:flex">
               {NAV.map((item) => (
-                <a
+                <Link
                   key={item.label}
                   href={item.href}
                   className={
@@ -55,7 +56,7 @@ export default function HomePage() {
                   }
                 >
                   {item.label}
-                </a>
+                </Link>
               ))}
             </nav>
           </div>
@@ -66,19 +67,19 @@ export default function HomePage() {
               alt=""
               className="hidden h-6 w-6 sm:block"
             />
-            <a
+            <Link
               href="/login"
               className="inline-flex items-center gap-1.5 rounded-full bg-[#f0f0f0] px-4 py-2.5 font-[family-name:var(--font-inter)] text-sm font-medium text-[#242424] transition-colors hover:bg-[#e6e6e6]"
             >
               Sign in
               <img src="/home/arrow-right.svg" alt="" className="h-4 w-4" />
-            </a>
-            <a
+            </Link>
+            <Link
               href="/register"
               className="inline-flex items-center rounded-full bg-[#d97a3a] px-4 py-2.5 font-[family-name:var(--font-inter)] text-sm font-bold text-white shadow-[0_4px_16px_rgba(217,122,58,0.3)] transition-all hover:-translate-y-px hover:bg-[#cc6d2f]"
             >
               Get Started
-            </a>
+            </Link>
           </div>
         </div>
       </header>
@@ -157,7 +158,7 @@ export default function HomePage() {
       </section>
 
       {/* ---------- What Makes Special ---------- */}
-      <section className="mx-auto w-full max-w-[1280px] px-6 py-16 text-center sm:px-8 lg:px-12">
+      <section id="about" className="mx-auto w-full max-w-[1280px] px-6 py-16 text-center sm:px-8 lg:px-12">
         <h2 className="text-[28px] font-bold text-black lg:text-[32px]">
           What Makes Food Spot Special?
         </h2>

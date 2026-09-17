@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ChefHat, ShoppingCart } from "lucide-react";
 
 type NavKey = "menu" | "orders" | "cart";
@@ -20,7 +21,7 @@ export default function AppHeader({
 
   return (
     <header className="mb-8 flex items-center justify-between gap-4">
-      <a href="/menu" className="flex items-center gap-2.5">
+      <Link href="/menu" className="flex items-center gap-2.5">
         <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-orange-600 to-orange-400 shadow-[0_4px_12px_rgba(234,88,12,0.4)]">
           <ChefHat className="h-5 w-5 text-white" />
         </div>
@@ -31,19 +32,19 @@ export default function AppHeader({
         >
           Foodie<span className="text-orange-600">Land</span>
         </span>
-      </a>
+      </Link>
 
       <nav className="flex items-center gap-3 text-sm font-medium sm:gap-5">
-        <a href="/menu" className={`transition-colors ${linkClass(active === "menu")}`}>
+        <Link href="/menu" className={`transition-colors ${linkClass(active === "menu")}`}>
           Menu
-        </a>
-        <a
+        </Link>
+        <Link
           href="/orders"
           className={`transition-colors ${linkClass(active === "orders")}`}
         >
           Orders
-        </a>
-        <a
+        </Link>
+        <Link
           href="/cart"
           aria-label="Cart"
           className={`relative inline-flex h-10 w-10 items-center justify-center rounded-xl border transition-colors ${
@@ -60,7 +61,7 @@ export default function AppHeader({
               {cartCount}
             </span>
           )}
-        </a>
+        </Link>
       </nav>
     </header>
   );

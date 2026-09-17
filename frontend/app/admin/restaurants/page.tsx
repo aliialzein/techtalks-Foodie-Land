@@ -1,5 +1,4 @@
 "use client";
-/* eslint-disable @next/next/no-img-element */
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -40,24 +39,38 @@ function AdminRestaurantsContent() {
   const [filter, setFilter] = useState<Filter>("All Status");
   const router = useRouter();
 
-  const loadPendingRestaurants = async () => {
-    setLoading(true);
-    setError("");
-    try {
-      const session = getSession();
-      const data = await apiRequest<RestaurantListItem[]>("/api/restaurants/pending", {
-        headers: { Authorization: `Bearer ${session?.token ?? ""}` },
-      });
-      setRestaurants(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Unable to load pending restaurants.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    void loadPendingRestaurants();
+    let isActive = true;
+
+    const fetchPendingRestaurants = async () => {
+      setLoading(true);
+      setError("");
+
+      try {
+        const session = getSession();
+        const data = await apiRequest<RestaurantListItem[]>("/api/restaurants/pending", {
+          headers: { Authorization: `Bearer ${session?.token ?? ""}` },
+        });
+
+        if (isActive) {
+          setRestaurants(data);
+        }
+      } catch (err) {
+        if (isActive) {
+          setError(err instanceof Error ? err.message : "Unable to load pending restaurants.");
+        }
+      } finally {
+        if (isActive) {
+          setLoading(false);
+        }
+      }
+    };
+
+    void fetchPendingRestaurants();
+
+    return () => {
+      isActive = false;
+    };
   }, []);
 
   const handleApprove = async (restaurantId: string) => {

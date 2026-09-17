@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChefHat, LogOut } from "lucide-react";
 import { clearSession } from "@/lib/auth";
@@ -29,7 +30,7 @@ export default function OwnerHeader({
 
   return (
     <header className="mb-8 flex items-center justify-between gap-4">
-      <a href="/owner" className="flex items-center gap-2.5">
+      <Link href="/owner" className="flex items-center gap-2.5">
         <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-orange-600 to-orange-400 shadow-[0_4px_12px_rgba(234,88,12,0.4)]">
           <ChefHat className="h-5 w-5 text-white" />
         </div>
@@ -43,27 +44,27 @@ export default function OwnerHeader({
         <span className="rounded-full border border-orange-500/30 bg-orange-500/10 px-2 py-0.5 text-[0.6rem] font-semibold uppercase tracking-wider text-orange-500">
           Owner
         </span>
-      </a>
+      </Link>
 
       <nav className="flex items-center gap-3 text-sm font-medium sm:gap-5">
-        <a
+        <Link
           href="/owner"
           className={`transition-colors ${linkClass(active === "dashboard")}`}
         >
           Dashboard
-        </a>
-        <a
+        </Link>
+        <Link
           href="/owner/menu"
           className={`transition-colors ${linkClass(active === "menu")}`}
         >
           Menu
-        </a>
-        <a
+        </Link>
+        <Link
           href="/owner/orders"
           className={`transition-colors ${linkClass(active === "orders")}`}
         >
           Orders
-        </a>
+        </Link>
         <button
           type="button"
           onClick={logout}

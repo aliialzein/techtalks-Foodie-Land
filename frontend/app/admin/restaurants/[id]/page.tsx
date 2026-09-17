@@ -8,16 +8,23 @@ import { ArrowLeft, Store, CalendarDays, Loader2 } from "lucide-react";
 import { getSession } from "@/lib/auth";
 import { apiRequest } from "@/lib/api";
 
-export default function RestaurantInfoPage() {
-  // Mock data (temporary)
- const { id } = useParams();
+type RestaurantRecord = {
+  id: string;
+  name: string;
+  description: string | null;
+  status: string;
+  createdAt: string;
+};
 
-const [restaurant, setRestaurant] = useState<any>(null);
-const [loading, setLoading] = useState(true);
-const [error, setError] = useState("");
-const [message, setMessage] = useState("");
-const [busy, setBusy] = useState(false);
-const [reason, setReason] = useState("");
+export default function RestaurantInfoPage() {
+  const { id } = useParams();
+
+  const [restaurant, setRestaurant] = useState<RestaurantRecord | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [reason, setReason] = useState("");
 
 useEffect(() => {
   const loadRestaurant = async () => {
@@ -183,31 +190,30 @@ if (!restaurant) {
               </div>
             </div>
 
-            <div className="mt-10 flex gap-4">
-                <button
-                   onClick={() => void handleApprove()}
-                   disabled={busy}
-                   className="flex-1 rounded-xl bg-gradient-to-r from-orange-600 to-orange-400 py-3 font-semibold text-white transition hover:scale-[1.02] disabled:opacity-60"
-                >
-                  {busy ? (
-                     <Loader2 className="mx-auto h-5 w-5 animate-spin" />
-                  ) : (
-                    "Approve Restaurant"
-                  )}
-               </button>
-              
+            {message && (
+              <div className="mt-6 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+                {message}
+              </div>
+            )}
 
-               <button
-                    onClick={() => void handleReject()}
-                    disabled={busy}
-                    className="flex-1 rounded-xl border border-red-300 py-3 font-semibold text-red-600 transition hover:bg-red-50 disabled:opacity-60"
-                >
-                    {busy ? (
-                        <Loader2 className="mx-auto h-5 w-5 animate-spin" />
-                    ) : (
-                      "Reject Restaurant"
-                    )}
-               </button>
+            <div className="mt-10 flex gap-4">
+              <button
+                type="button"
+                onClick={() => void handleApprove()}
+                disabled={busy}
+                className="flex-1 rounded-xl bg-gradient-to-r from-orange-600 to-orange-400 py-3 font-semibold text-white transition hover:scale-[1.02] disabled:opacity-60"
+              >
+                {busy ? <Loader2 className="mx-auto h-5 w-5 animate-spin" /> : "Approve Restaurant"}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => void handleReject()}
+                disabled={busy}
+                className="flex-1 rounded-xl border border-red-300 py-3 font-semibold text-red-600 transition hover:bg-red-50 disabled:opacity-60"
+              >
+                {busy ? <Loader2 className="mx-auto h-5 w-5 animate-spin" /> : "Reject Restaurant"}
+              </button>
             </div>
           </div>
         </div>
